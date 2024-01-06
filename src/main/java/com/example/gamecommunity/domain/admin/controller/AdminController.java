@@ -27,38 +27,44 @@ public class AdminController {
   public ResponseEntity<ApiResponse> getUsers(
 //      @AuthenticationPrincipal UserDetailsImpl userDetails
   ) {
-    var users = adminService.getUsers();
-    return ResponseEntity.ok(ApiResponse.ok("유저 정보 목록", users));
+    var usersDto = adminService.getUsers();
+    return ResponseEntity.ok(ApiResponse.ok("유저 정보 목록 조회 성공", usersDto));
   }
 
   @GetMapping("/users/{userId}")
   public ResponseEntity<ApiResponse> getUser(@PathVariable long userId) {
-    return ResponseEntity.ok(ApiResponse.ok("", null));
+    var userDto = adminService.getUser(userId);
+    return ResponseEntity.ok(ApiResponse.ok("유저 정보 조회 성공", userDto));
   }
 
   @DeleteMapping("/users/{userId}")
   public ResponseEntity<ApiResponse> deleteUser(@PathVariable long userId) {
-    return ResponseEntity.ok(ApiResponse.ok("", null));
+    adminService.deleteUser(userId);
+    return ResponseEntity.ok(ApiResponse.ok("유저 삭제 성공", null));
   }
 
   @PatchMapping("/users/block")
   public ResponseEntity<ApiResponse> setBlock(
       @RequestBody UserBlockRequestDto userBlockRequestDto) {
-    return ResponseEntity.ok(ApiResponse.ok("", null));
+    adminService.setBlock(userBlockRequestDto);
+    return ResponseEntity.ok(ApiResponse.ok("유저 차단 성공", null));
   }
 
   @GetMapping("/posts/report")
   public ResponseEntity<ApiResponse> getReportedPosts() {
-    return ResponseEntity.ok(ApiResponse.ok("", null));
+    var postsDto = adminService.getReportedPosts();
+    return ResponseEntity.ok(ApiResponse.ok("신고 게시물 목록 조회 성공", postsDto));
   }
 
   @GetMapping("/posts/report/{postId}")
   public ResponseEntity<ApiResponse> getReportedPost(@PathVariable long postId) {
-    return ResponseEntity.ok(ApiResponse.ok("", null));
+    var postDto = adminService.getReportedPost(postId);
+    return ResponseEntity.ok(ApiResponse.ok("신고 게시물 조회 성공", postDto));
   }
 
   @PostMapping("/notices")
   public ResponseEntity<ApiResponse> writeNotice(@RequestBody NoticeRequestDto noticeRequestDto) {
-    return ResponseEntity.ok(ApiResponse.ok("", null));
+    adminService.writeNotice(noticeRequestDto);
+    return ResponseEntity.ok(ApiResponse.ok("공지사항 작성 성공", null));
   }
 }
