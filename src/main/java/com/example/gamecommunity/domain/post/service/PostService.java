@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class PostService {
 
   public PostResponseDto getPost(Long postId) {
 
-    Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+    Post post = getFindPost(postId);
 
     return PostResponseDto.fromEntity(post);
   }
@@ -45,6 +46,18 @@ public class PostService {
     Page<Post> postList = postRepository.findAll(pageable);
 
     return postList.map(PostResponseDto::fromEntity);
+  }
+
+  @Transactional
+  public void updatePost(Long postId, PostRequestDto requestDto) {
+
+    Post post = getFindPost(postId);
+
+    post.update(requestDto);
+  }
+
+  private Post getFindPost(Long postId) {
+    return postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
   }
 }
 

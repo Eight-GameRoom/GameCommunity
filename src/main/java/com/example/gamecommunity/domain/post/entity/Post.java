@@ -74,4 +74,9 @@ public class Post extends TimeStamped {
     this.postLike = 0;
     this.postUnlike = 0;
   }
+
+  public void update(PostRequestDto requestDto) {
+    this.postTitle = requestDto.postTitle();
+    this.postContent = requestDto.postContent();
+  }
 }

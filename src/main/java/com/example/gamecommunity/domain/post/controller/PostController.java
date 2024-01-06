@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +48,7 @@ public class PostController {
 
     try {
       PostResponseDto responseDto = postService.getPost(postId);
-      return ResponseEntity.status(HttpStatus.CREATED)
+      return ResponseEntity.ok()
           .body(new CommonResponseDto("게시글 단건 조회 성공", responseDto));
     } catch (BusinessException e) {
       return ResponseEntity.status(e.getStatus())
@@ -72,5 +74,25 @@ public class PostController {
 
     return ResponseEntity.ok(responseDto);
   }
+
+  // 게시글 수정
+  @PatchMapping("/{postId}")
+  public ResponseEntity<?> updatePost(
+      @PathVariable Long postId,
+      @RequestBody PostRequestDto requestDto) {
+
+    try {
+      postService.updatePost(postId, requestDto);
+      return ResponseEntity.ok()
+          .body(new CommonResponseDto("게시글 수정 성공"));
+    } catch (BusinessException e) {
+      return ResponseEntity.status(e.getStatus())
+          .body(new CommonResponseDto(e.getMessage()));
+    }
+  }
+
+
+  // 게시글 삭제
+//  @DeleteMapping("/{postId}")
 
 }
