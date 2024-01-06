@@ -1,5 +1,65 @@
 package com.example.gamecommunity.domain.post.entity;
 
-public class Post {
+import com.example.gamecommunity.domain.enums.boardName.BoardName;
+import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.post.dto.PostRequestDto;
+import com.example.gamecommunity.global.common.TimeStamped;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "posts")
+public class Post extends TimeStamped {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long postId;
+
+  @Column(nullable = false)
+  private String postTitle;
+
+  @Column(nullable = false)
+  private String postContent;
+
+  @Column
+  private String postAuthor;
+
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private GameType gameType;
+
+  @Column
+  @Enumerated(EnumType.STRING)
+  private GameName gameName;
+
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private BoardName boardName;
+
+  public Post(PostRequestDto requestDto, GameType gameType, GameName gameName,
+      BoardName boardName) {
+    this.postTitle = requestDto.postTitle();
+    this.postContent = requestDto.postContent();
+    this.postAuthor = "username";
+    this.gameType = gameType;
+    this.gameName = gameName;
+    this.boardName = boardName;
+  }
 }
