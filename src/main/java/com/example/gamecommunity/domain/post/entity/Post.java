@@ -53,6 +53,15 @@ public class Post extends TimeStamped {
   @Enumerated(EnumType.STRING)
   private BoardName boardName;
 
+  @Column(nullable = false)
+  private Integer report;
+
+  @Column(nullable = false)
+  private Integer postLike;
+
+  @Column(nullable = false)
+  private Integer postUnlike;
+
   public Post(PostRequestDto requestDto, GameType gameType, GameName gameName,
       BoardName boardName) {
     this.postTitle = requestDto.postTitle();
@@ -61,5 +70,8 @@ public class Post extends TimeStamped {
     this.gameType = gameType;
     this.gameName = gameName;
     this.boardName = boardName;
+    this.report = 0;
+    this.postLike = 0;
+    this.postUnlike = 0;
   }
 }

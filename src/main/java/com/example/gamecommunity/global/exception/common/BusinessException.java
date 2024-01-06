@@ -1,6 +1,11 @@
 package com.example.gamecommunity.global.exception.common;
 
+import lombok.Getter;
+
+@Getter
 public class BusinessException extends RuntimeException{
+
+  private int status;
 
   public BusinessException(ErrorCode errorCode) {
     super(errorCode.getMessage());
