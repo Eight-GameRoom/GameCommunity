@@ -91,8 +91,18 @@ public class PostController {
     }
   }
 
-
   // 게시글 삭제
-//  @DeleteMapping("/{postId}")
+  @DeleteMapping("/{postId}")
+  public ResponseEntity<?> deletePost(
+      @PathVariable Long postId) {
 
+    try {
+      postService.deletePost(postId);
+      return ResponseEntity.ok()
+          .body(new CommonResponseDto("게시글 삭제 성공"));
+    } catch (BusinessException e) {
+      return ResponseEntity.status(e.getStatus())
+          .body(new CommonResponseDto(e.getMessage()));
+    }
+  }
 }
