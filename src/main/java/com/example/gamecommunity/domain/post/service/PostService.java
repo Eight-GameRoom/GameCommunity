@@ -9,6 +9,10 @@ import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.global.exception.post.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,6 +34,17 @@ public class PostService {
     Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
     return PostResponseDto.fromEntity(post);
+  }
+
+  public Page<PostResponseDto> getPosts(int page, int size, String sortKey, boolean isAsc) {
+    // 페이징 및 정렬처리
+    Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+    Sort sort = Sort.by(direction, sortKey);
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    Page<Post> postList = postRepository.findAll(pageable);
+
+    return postList.map(PostResponseDto::fromEntity);
   }
 }
 

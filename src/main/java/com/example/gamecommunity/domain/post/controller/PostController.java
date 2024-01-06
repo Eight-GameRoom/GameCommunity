@@ -9,6 +9,7 @@ import com.example.gamecommunity.domain.post.service.PostService;
 import com.example.gamecommunity.global.common.CommonResponseDto;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +52,25 @@ public class PostController {
       return ResponseEntity.status(e.getStatus())
           .body(new CommonResponseDto(e.getMessage()));
     }
+  }
+
+  // 게시글 페이징 조회
+  @GetMapping
+  public ResponseEntity<?> getPosts(
+      @RequestParam("page") int page,
+      @RequestParam("size") int size,
+      @RequestParam("sortKey") String sortKey,
+      @RequestParam("isAsc") boolean isAsc) {
+
+    Page<PostResponseDto> responseDtoPage = postService.getPosts(
+        page - 1, size, sortKey, isAsc);
+
+    CommonResponseDto responseDto = CommonResponseDto.builder()
+        .message("게시글 페이징 조회 성공")
+        .data(responseDtoPage)
+        .build();
+
+    return ResponseEntity.ok(responseDto);
   }
 
 }
