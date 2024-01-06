@@ -62,10 +62,13 @@ public class PostController {
       @RequestParam("page") int page,
       @RequestParam("size") int size,
       @RequestParam("sortKey") String sortKey,
-      @RequestParam("isAsc") boolean isAsc) {
+      @RequestParam("isAsc") boolean isAsc,
+      @RequestParam(name = "type") GameType type,
+      @RequestParam(name = "game") GameName game,
+      @RequestParam(name = "board") BoardName board) {
 
     Page<PostResponseDto> responseDtoPage = postService.getPosts(
-        page - 1, size, sortKey, isAsc);
+        page - 1, size, sortKey, isAsc, type, game, board);
 
     CommonResponseDto responseDto = CommonResponseDto.builder()
         .message("게시글 페이징 조회 성공")

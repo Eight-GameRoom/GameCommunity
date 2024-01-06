@@ -37,13 +37,15 @@ public class PostService {
     return PostResponseDto.fromEntity(post);
   }
 
-  public Page<PostResponseDto> getPosts(int page, int size, String sortKey, boolean isAsc) {
+  public Page<PostResponseDto> getPosts(
+      int page, int size, String sortKey, boolean isAsc,
+      GameType type, GameName game, BoardName board) {
     // 페이징 및 정렬처리
     Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
     Sort sort = Sort.by(direction, sortKey);
     Pageable pageable = PageRequest.of(page, size, sort);
 
-    Page<Post> postList = postRepository.findAll(pageable);
+    Page<Post> postList = postRepository.findByGameTypeAndGameNameAndBoardName(type, game, board, pageable);
 
     return postList.map(PostResponseDto::fromEntity);
   }
