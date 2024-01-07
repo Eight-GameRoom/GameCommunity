@@ -33,7 +33,7 @@ public class PostController {
   @PostMapping
   public ResponseEntity<?> createPost(
       @RequestBody PostRequestDto requestDto,
-      @RequestParam GameType gameType,
+      @RequestParam(required = false) GameType gameType,
       @RequestParam(required = false) GameName gameName,
       @RequestParam BoardName boardName) {
 
