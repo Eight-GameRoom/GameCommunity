@@ -1,81 +1,62 @@
 package com.example.gamecommunity.global.exception.common;
 
-
-import com.example.gamecommunity.global.dto.ErrorResponse;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.gamecommunity.global.response.ApiResponse;
+import java.util.NoSuchElementException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(BindException.class)
-  protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
+	@ExceptionHandler( NoSuchElementException.class )
+	protected ResponseEntity<ApiResponse> handlerNoSuchElementFoundException( NoSuchElementException ex ) {
+		HttpStatus hs = HttpStatus.NOT_FOUND;
+		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getMessage() );
 
-    BindingResult bindingResult = e.getBindingResult();
+		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
+	}
 
-    List<String> errorMessages = bindingResult.getFieldErrors().stream()
-        .map(FieldError::getDefaultMessage)
-        .collect(Collectors.toList());
+	@ExceptionHandler( IllegalArgumentException.class )
+	protected ResponseEntity< ApiResponse > handlerIllegalArgumentException( IllegalArgumentException ex ) {
+		HttpStatus hs = HttpStatus.BAD_REQUEST;
+		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getMessage() );
 
-    ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, errorMessages);
+		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
+	}
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-  }
+	@ExceptionHandler( DuplicateKeyException.class )
+	protected ResponseEntity< ApiResponse > handlerDuplicateKeyException( DuplicateKeyException ex ) {
+		HttpStatus hs = HttpStatus.CONFLICT;
+		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getMessage() );
 
-  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-  protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
-      HttpRequestMethodNotSupportedException e) {
+		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
+	}
 
-    ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED,
-        List.of(e.getMessage()));
+	@ExceptionHandler( Exception.class )
+	protected ResponseEntity< ApiResponse > handlerException( Exception ex ) {
+		HttpStatus hs = HttpStatus.INTERNAL_SERVER_ERROR;
+		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getMessage() );
 
-    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
-  }
+		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
+	}
 
-  @ExceptionHandler(BusinessException.class)
-  protected ResponseEntity<ErrorResponse> handleConflict(BusinessException e) {
+	@ExceptionHandler
+	public ResponseEntity<ApiResponse> handlerCustomException(BusinessException ex) {
+		HttpStatus hs = ex.getStatus();
+		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getMessage() );
+		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
+	}
 
-    HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus());
-    ErrorResponse errorResponse = ErrorResponse.of(httpStatus, List.of(e.getMessage()));
+	@ExceptionHandler
+	public ResponseEntity<ApiResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		HttpStatus hs = HttpStatus.BAD_REQUEST;
+		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getBindingResult().getAllErrors().get(0).getDefaultMessage() );
+		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
+	}
 
-    return ResponseEntity.status(httpStatus).body(errorResponse);
-  }
-
-  @ExceptionHandler(HttpMessageConversionException.class)
-  protected ResponseEntity<ErrorResponse> handleHttpMessageConversionException(
-      HttpMessageConversionException e) {
-
-    ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, List.of(e.getMessage()));
-
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-  }
-
-  @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-  protected ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(
-      HttpMediaTypeNotSupportedException e) {
-
-    ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, List.of(e.getMessage()));
-
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-  }
-
-  @ExceptionHandler(Exception.class)
-  protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-
-    ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
-        List.of(e.getMessage()));
-
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-  }
 }
