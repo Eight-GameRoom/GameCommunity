@@ -58,4 +58,5 @@ public class GlobalExceptionHandler {
 		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getBindingResult().getAllErrors().get(0).getDefaultMessage() );
 		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
 	}
+
 }

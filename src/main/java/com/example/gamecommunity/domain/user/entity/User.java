@@ -42,7 +42,9 @@ public class User {
   @Column(nullable = false)
   private int ranking;
 
-  @Column(nullable = false)
+  @Column()
   private String profileUrl;
+
+
 
 }

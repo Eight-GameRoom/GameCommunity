@@ -1,4 +1,4 @@
-package com.example.gamecommunity.global.common;
+package com.example.gamecommunity.global.auditing;
 
 
 import jakarta.persistence.EntityListeners;
