@@ -39,6 +39,9 @@ public class Post extends TimeStamped {
   private String postContent;
 
   @Column
+  private String postImageUrl;
+
+  @Column
   private String postAuthor;
 
   @Column(nullable = false)
@@ -66,6 +69,7 @@ public class Post extends TimeStamped {
       BoardName boardName) {
     this.postTitle = requestDto.postTitle();
     this.postContent = requestDto.postContent();
+    this.postImageUrl = requestDto.postImageUrl();
     this.postAuthor = "username";
     this.gameType = gameType;
     this.gameName = gameName;

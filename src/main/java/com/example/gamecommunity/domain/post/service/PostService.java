@@ -66,7 +66,7 @@ public class PostService {
     postRepository.delete(post);
   }
 
-  private Post getFindPost(Long postId) {
+  public Post getFindPost(Long postId) {
     return postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
   }
 
