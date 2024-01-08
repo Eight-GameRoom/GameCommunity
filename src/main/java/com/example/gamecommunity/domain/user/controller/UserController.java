@@ -1,9 +1,12 @@
 package com.example.gamecommunity.domain.user.controller;
 
+import com.example.gamecommunity.domain.user.dto.LoginRequestDto;
 import com.example.gamecommunity.domain.user.dto.SignupRequestDto;
+import com.example.gamecommunity.domain.user.dto.TokenDto;
 import com.example.gamecommunity.domain.user.service.UserService;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.util.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,17 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("회원가입 성공.", null));
   }
 
+  //로그인
+  @PostMapping("/login")
+  public ResponseEntity<ApiResponse> login(
+      @Valid @RequestBody LoginRequestDto requestDto,
+      HttpServletResponse response) {
 
+    TokenDto tokenDto = userService.login(requestDto);
+
+    jwtUtil.setTokenResponse(tokenDto, response);
+
+    return ResponseEntity.ok(ApiResponse.ok("로그인 성공.", null));
+  }
 
 }

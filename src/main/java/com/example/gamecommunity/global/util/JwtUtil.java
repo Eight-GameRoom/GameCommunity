@@ -1,5 +1,6 @@
 package com.example.gamecommunity.global.util;
 
+import com.example.gamecommunity.domain.user.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -11,6 +12,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -97,4 +99,16 @@ public class JwtUtil {
     return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody(); // body안에 claim기반 데이터 반환
   }
 
+  public void setTokenResponse(TokenDto tokenDto, HttpServletResponse response) {
+    setHeaderAccessToken(tokenDto.accessToken(), response);
+    setHeaderRefreshToken(tokenDto.refreshToken(),response);
+
+  }
+
+  private void setHeaderAccessToken(String accessToken, HttpServletResponse response) {
+    response.setHeader(Access_Header, BEARER_PREFIX + accessToken);
+  }
+  private void setHeaderRefreshToken(String refreshToken, HttpServletResponse response) {
+    response.setHeader(Refresh_Header, BEARER_PREFIX + refreshToken);
+  }
 }
