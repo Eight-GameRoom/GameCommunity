@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
   private final UserRepository userRepository;
-  private final PostRepository postRepository;
+  //private final PostRepository postRepository;
 
   public List<AdminUserResponseDto> getUsers() {
     return userRepository.findAll().stream().map(u ->
@@ -78,8 +78,9 @@ public class AdminService {
     return null;
   }
 
+  @Transactional
   public void writeNotice(NoticeRequestDto noticeRequestDto) {
     Post post = null;//Post.builder()
-    postRepository.save(post);
+    //postRepository.save(post);
   }
 }
