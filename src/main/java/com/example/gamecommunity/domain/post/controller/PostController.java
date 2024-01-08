@@ -6,11 +6,10 @@ import com.example.gamecommunity.domain.enums.gameType.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
-import com.example.gamecommunity.global.common.CommonResponseDto;
-import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.response.ApiResponse;
+import com.example.gamecommunity.global.response.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,22 +37,15 @@ public class PostController {
       @RequestParam BoardName boardName) {
 
     postService.createPost(requestDto, gameType, gameName, boardName);
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(new CommonResponseDto("게시글 생성 성공"));
+    return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", null));
   }
 
   // 게시글 단건 조회
   @GetMapping("/{postId}")
   public ResponseEntity<?> getPost(@PathVariable Long postId) {
 
-    try {
-      PostResponseDto responseDto = postService.getPost(postId);
-      return ResponseEntity.ok()
-          .body(new CommonResponseDto("게시글 단건 조회 성공", responseDto));
-    } catch (BusinessException e) {
-      return ResponseEntity.status(e.getStatus())
-          .body(new CommonResponseDto(e.getMessage()));
-    }
+    PostResponseDto responseDto = postService.getPost(postId);
+    return ResponseEntity.ok(ApiResponse.ok(postId + "번 게시글 조회 성공", responseDto));
   }
 
   // 게시글 페이징 조회
@@ -70,12 +62,7 @@ public class PostController {
     Page<PostResponseDto> responseDtoPage = postService.getPosts(
         page - 1, size, sortKey, isAsc, type, game, board);
 
-    CommonResponseDto responseDto = CommonResponseDto.builder()
-        .message("게시글 페이징 조회 성공")
-        .data(responseDtoPage)
-        .build();
-
-    return ResponseEntity.ok(responseDto);
+    return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", responseDtoPage));
   }
 
   // 게시글 수정
@@ -84,14 +71,8 @@ public class PostController {
       @PathVariable Long postId,
       @RequestBody PostRequestDto requestDto) {
 
-    try {
-      postService.updatePost(postId, requestDto);
-      return ResponseEntity.ok()
-          .body(new CommonResponseDto("게시글 수정 성공"));
-    } catch (BusinessException e) {
-      return ResponseEntity.status(e.getStatus())
-          .body(new CommonResponseDto(e.getMessage()));
-    }
+    postService.updatePost(postId, requestDto);
+    return ResponseEntity.ok(ApiResponse.ok("게시글 수정 성공", null));
   }
 
   // 게시글 삭제
@@ -99,13 +80,8 @@ public class PostController {
   public ResponseEntity<?> deletePost(
       @PathVariable Long postId) {
 
-    try {
-      postService.deletePost(postId);
-      return ResponseEntity.ok()
-          .body(new CommonResponseDto("게시글 삭제 성공"));
-    } catch (BusinessException e) {
-      return ResponseEntity.status(e.getStatus())
-          .body(new CommonResponseDto(e.getMessage()));
-    }
+    postService.deletePost(postId);
+    return ResponseEntity.ok(ApiResponse.ok("게시글 삭제 성공", null));
   }
+
 }

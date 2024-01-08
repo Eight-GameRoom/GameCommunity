@@ -1,5 +1,6 @@
 package com.example.gamecommunity.global.exception.common;
 
+import com.example.gamecommunity.global.exception.post.PostNotFoundException;
 import com.example.gamecommunity.global.response.ApiResponse;
 import java.util.NoSuchElementException;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,11 +14,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler( NoSuchElementException.class )
+	@ExceptionHandler(PostNotFoundException.class)
+	protected ResponseEntity<ApiResponse> handlePostNotFoundException(PostNotFoundException ex) {
+		HttpStatus hs = ex.getStatus();
+		final ErrorResponse errorResponse = ErrorResponse.create(ex, hs, ex.getMessage());
+		return ResponseEntity.status(hs).body(ApiResponse.fail(ex.getMessage(), errorResponse));
+	}
+
+	@ExceptionHandler( {NoSuchElementException.class} )
 	protected ResponseEntity<ApiResponse> handlerNoSuchElementFoundException( NoSuchElementException ex ) {
 		HttpStatus hs = HttpStatus.NOT_FOUND;
 		final ErrorResponse errorResponse = ErrorResponse.create( ex, hs, ex.getMessage() );
-
 		return ResponseEntity.status( hs ).body( ApiResponse.fail( ex.getMessage(), errorResponse ) );
 	}
 

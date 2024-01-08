@@ -4,7 +4,7 @@ import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
-import com.example.gamecommunity.global.common.TimeStamped;
+import com.example.gamecommunity.global.audting.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

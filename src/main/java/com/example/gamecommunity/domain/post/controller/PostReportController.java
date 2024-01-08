@@ -1,8 +1,8 @@
 package com.example.gamecommunity.domain.post.controller;
 
 import com.example.gamecommunity.domain.post.service.PostReportService;
-import com.example.gamecommunity.global.common.CommonResponseDto;
 import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +21,8 @@ public class PostReportController {
   @PostMapping
   public ResponseEntity<?> addReport(@PathVariable Long postId) {
 
-    try {
       postReportService.addReport(postId);
-      return ResponseEntity.ok()
-          .body(new CommonResponseDto("게시글 신고 성공"));
-    } catch (BusinessException e) {
-      return ResponseEntity.status(e.getStatus())
-          .body(new CommonResponseDto(e.getMessage()));
-    }
+      return ResponseEntity.ok(ApiResponse.ok("게시글 신고 성공", null));
   }
 
 }

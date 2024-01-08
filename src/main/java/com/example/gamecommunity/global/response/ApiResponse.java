@@ -1,9 +1,11 @@
 package com.example.gamecommunity.global.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.ErrorResponse;
 
 @Getter
+@Builder
 public class ApiResponse< T > {
 	private String message;
 	private ResponseBody data;
