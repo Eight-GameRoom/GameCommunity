@@ -13,17 +13,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "posts")
 public class Post extends TimeStamped {
@@ -44,7 +43,7 @@ public class Post extends TimeStamped {
   @Column
   private String postAuthor;
 
-  @Column(nullable = false)
+  @Column
   @Enumerated(EnumType.STRING)
   private GameType gameType;
 
@@ -67,6 +66,7 @@ public class Post extends TimeStamped {
 
   public Post(PostRequestDto requestDto, GameType gameType, GameName gameName,
       BoardName boardName) {
+    this.postId = getPostId();
     this.postTitle = requestDto.postTitle();
     this.postContent = requestDto.postContent();
     this.postImageUrl = requestDto.postImageUrl();

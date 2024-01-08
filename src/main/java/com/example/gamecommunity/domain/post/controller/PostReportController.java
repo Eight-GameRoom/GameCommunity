@@ -1,7 +1,6 @@
 package com.example.gamecommunity.domain.post.controller;
 
 import com.example.gamecommunity.domain.post.service.PostReportService;
-import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,8 @@ public class PostReportController {
   @PostMapping
   public ResponseEntity<?> addReport(@PathVariable Long postId) {
 
-      postReportService.addReport(postId);
-      return ResponseEntity.ok(ApiResponse.ok("게시글 신고 성공", null));
+    postReportService.addReport(postId);
+    return ResponseEntity.ok(ApiResponse.ok("게시글 신고 성공", null));
   }
 
 }

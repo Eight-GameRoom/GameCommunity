@@ -7,7 +7,6 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
 import com.example.gamecommunity.global.response.ApiResponse;
-import com.example.gamecommunity.global.response.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -55,14 +54,14 @@ public class PostController {
       @RequestParam("size") int size,
       @RequestParam("sortKey") String sortKey,
       @RequestParam("isAsc") boolean isAsc,
-      @RequestParam(name = "type") GameType type,
-      @RequestParam(name = "game") GameName game,
+      @RequestParam(name = "type", required = false) GameType type,
+      @RequestParam(name = "game", required = false) GameName game,
       @RequestParam(name = "board") BoardName board) {
 
     Page<PostResponseDto> responseDtoPage = postService.getPosts(
         page - 1, size, sortKey, isAsc, type, game, board);
 
-    return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", responseDtoPage));
+    return ResponseEntity.ok(ApiResponse.ok("게시글 페이징 조회 성공", responseDtoPage));
   }
 
   // 게시글 수정

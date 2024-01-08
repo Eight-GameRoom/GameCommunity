@@ -1,7 +1,6 @@
 package com.example.gamecommunity.domain.post.controller;
 
 import com.example.gamecommunity.domain.post.service.PostLikeService;
-import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,15 @@ public class PostLikeController {
       @RequestParam Boolean isLike) {
 
     postLikeService.addLike(postId);
-    return ResponseEntity.ok(ApiResponse.ok("좋아요 또는 싫어요 성공", null));
+    String message;
+
+    if (isLike) {
+      message = "좋아요";
+    } else {
+      message = "싫어요";
+    }
+
+    return ResponseEntity.ok(ApiResponse.ok(message + " 성공", null));
   }
 
 }
