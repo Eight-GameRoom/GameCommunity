@@ -106,9 +106,9 @@ public class JwtUtil {
   }
 
   private void setHeaderAccessToken(String accessToken, HttpServletResponse response) {
-    response.setHeader(Access_Header, BEARER_PREFIX + accessToken);
+    response.setHeader(Access_Header, accessToken);
   }
   private void setHeaderRefreshToken(String refreshToken, HttpServletResponse response) {
-    response.setHeader(Refresh_Header, BEARER_PREFIX + refreshToken);
+    response.setHeader(Refresh_Header, refreshToken);
   }
 }
