@@ -9,6 +9,7 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class PostService {
       GameType gameType,
       GameName gameName,
       BoardName boardName,
-      MultipartFile file) throws IOException {
+      MultipartFile file, User loginUser) throws IOException {
 
     String imageUrl = null;
 
@@ -44,7 +45,8 @@ public class PostService {
     }
 
     // 게시글 생성
-    Post post = new Post(requestDto, gameType, gameName, boardName, imageUrl);
+    Post post = new Post(
+        requestDto, gameType, gameName, boardName, imageUrl, loginUser);
 
     postRepository.save(post);
   }

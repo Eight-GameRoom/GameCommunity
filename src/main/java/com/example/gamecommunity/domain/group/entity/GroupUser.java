@@ -23,12 +23,6 @@ public class GroupUser extends TimeStamped {
   @Column
   private String role;
 
-//  @ManyToOne
-//  @JoinColumn(name = "user_id", nullable = false)
-//
-//  @ManyToOne
-//  @JoinColumn(name = "group_id", nullable = false)
-
 
 
 }

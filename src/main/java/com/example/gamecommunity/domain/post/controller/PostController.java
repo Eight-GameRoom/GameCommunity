@@ -6,11 +6,14 @@ import com.example.gamecommunity.domain.enums.gameType.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.response.ApiResponse;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,9 +40,12 @@ public class PostController {
       @RequestPart(value = "file", required = false) MultipartFile file,
       @RequestParam(required = false) GameType gameType,
       @RequestParam(required = false) GameName gameName,
-      @RequestParam BoardName boardName) throws IOException {
+      @RequestParam BoardName boardName,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    postService.createPost(requestDto, gameType, gameName, boardName, file);
+    User loginUser = userDetails.getUser();
+
+    postService.createPost(requestDto, gameType, gameName, boardName, file, loginUser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", null));
   }
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Groups")
+@Table(name = "TB_Groups")
 public class Group extends TimeStamped {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,6 @@ public class Group extends TimeStamped {
   @Column
   private String gameName;
 
-//  @OneToMany(mappedBy = "group")
-//  private List<GroupUser> GroupUsers  = new ArrayList<>();
+
 
 }

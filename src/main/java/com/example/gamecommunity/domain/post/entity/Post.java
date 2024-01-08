@@ -4,6 +4,7 @@ import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,12 +66,12 @@ public class Post extends TimeStamped {
   private Integer postUnlike;
 
   public Post(PostRequestDto requestDto, GameType gameType, GameName gameName,
-      BoardName boardName, String postImageUrl) {
+      BoardName boardName, String postImageUrl, User loginUser) {
     this.postId = getPostId();
     this.postTitle = requestDto.postTitle();
     this.postContent = requestDto.postContent();
     this.postImageUrl = postImageUrl;
-    this.postAuthor = "username";
+    this.postAuthor = loginUser.getNickname();
     this.gameType = gameType;
     this.gameName = gameName;
     this.boardName = boardName;
