@@ -1,7 +1,6 @@
 package com.example.gamecommunity.global.config;
 
 
-import com.example.gamecommunity.global.security.filter.JwtAuthenticationFilter;
 import com.example.gamecommunity.global.security.filter.JwtAuthorizationFilter;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsServiceImpl;
 import com.example.gamecommunity.global.util.JwtUtil;
@@ -26,9 +25,6 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
-    private final AuthenticationConfiguration authenticationConfiguration;
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,13 +34,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        return filter;
     }
 
     @Bean
@@ -77,10 +66,7 @@ public class SecurityConfig {
         );
 
 
-
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
