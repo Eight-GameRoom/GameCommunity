@@ -1,5 +1,12 @@
 package com.example.gamecommunity.domain.admin.dto;
 
-public class AdminUserResponseDto {
+import lombok.Builder;
 
+@Builder
+public class AdminUserResponseDto {
+  private String email;
+  private String nickname;
+  private String introduction;
+  private int ranking;
+  private String profileUrl;
 }

@@ -1,5 +1,9 @@
 package com.example.gamecommunity.domain.admin.dto;
 
-public class AdminPostResponseDto {
+import lombok.Builder;
 
+@Builder
+public class AdminPostResponseDto {
+  private String postTitle;
+  private String postContent;
 }
