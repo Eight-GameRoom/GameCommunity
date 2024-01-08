@@ -1,7 +1,6 @@
 package com.example.gamecommunity.domain.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
-
 public record LoginRequestDto(
     @NotBlank(message = "이메일 공백일 수 없습니다.")
     String email,
