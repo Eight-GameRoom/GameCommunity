@@ -11,7 +11,7 @@ public class GroupService {
 
 
   public List<GroupResponseDto> getGroup(User user, Long userId) {
-
+return null;
   }
 
   public void createGroup(User user, GroupRequestDto groupRequestDto) {
