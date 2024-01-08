@@ -6,9 +6,9 @@ import org.springframework.web.ErrorResponse;
 @Getter
 public class ApiResponse< T > {
 	private String message;
-	private ResponseBody data;
+	private T data;
 
-	public ApiResponse( String message, ResponseBody data) {
+	public ApiResponse( String message, T data) {
 		this.message = message;
 		this.data = data;
 	}
@@ -16,14 +16,14 @@ public class ApiResponse< T > {
 	public static < T > ApiResponse< T > ok( String message, T data ) {
 		return new ApiResponse< T >(
 				message,
-				new ResponseBody( data )
+				data
 		);
 	}
 
-	public static < T > ApiResponse< T > fail( String message, ErrorResponse errorResponse ) {
+	public static < T > ApiResponse< T > fail( String message, T errorResponse ) {
 		return new ApiResponse< T >(
 				message,
-				new ResponseBody( errorResponse )
+				errorResponse
 		);
 	}
 }
