@@ -8,6 +8,7 @@ import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.global.exception.post.PostNotFoundException;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,24 @@ public class PostService {
 
   private final PostRepository postRepository;
 
-  public void createPost(
-      PostRequestDto requestDto, GameType gameType, GameName gameName, BoardName boardName) {
+  private final PostImageUploadService postImageUploadService;
 
-    Post post = new Post(requestDto, gameType, gameName, boardName);
+  public void createPost(
+      PostRequestDto requestDto,
+      GameType gameType,
+      GameName gameName,
+      BoardName boardName,
+      MultipartFile file) throws IOException {
+
+    String imageUrl = null;
+
+    // 파일이 존재하는 경우에만 이미지 업로드를 수행
+    if (file != null && !file.isEmpty()) {
+      imageUrl = postImageUploadService.uploadFile(file);
+    }
+
+    // 게시글 생성
+    Post post = new Post(requestDto, gameType, gameName, boardName, imageUrl);
 
     postRepository.save(post);
   }
@@ -51,11 +67,19 @@ public class PostService {
   }
 
   @Transactional
-  public void updatePost(Long postId, PostRequestDto requestDto) {
+  public void updatePost(
+      Long postId, PostRequestDto requestDto, MultipartFile file) throws IOException {
 
     Post post = getFindPost(postId);
 
-    post.update(requestDto);
+    String imageUrl = null;
+
+    // 파일이 존재하는 경우에만 이미지 업로드를 수행
+    if (file != null && !file.isEmpty()) {
+      imageUrl = postImageUploadService.uploadFile(file);
+    }
+
+    post.update(requestDto, imageUrl);
   }
 
   @Transactional

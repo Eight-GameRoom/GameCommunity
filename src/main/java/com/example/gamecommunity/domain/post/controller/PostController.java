@@ -7,6 +7,7 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
 import com.example.gamecommunity.global.response.ApiResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -30,12 +33,13 @@ public class PostController {
   // 게시글 작성
   @PostMapping
   public ResponseEntity<?> createPost(
-      @RequestBody PostRequestDto requestDto,
+      @RequestPart(value = "requestDto") PostRequestDto requestDto,
+      @RequestPart(value = "file", required = false) MultipartFile file,
       @RequestParam(required = false) GameType gameType,
       @RequestParam(required = false) GameName gameName,
-      @RequestParam BoardName boardName) {
+      @RequestParam BoardName boardName) throws IOException {
 
-    postService.createPost(requestDto, gameType, gameName, boardName);
+    postService.createPost(requestDto, gameType, gameName, boardName, file);
     return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", null));
   }
 
@@ -68,9 +72,10 @@ public class PostController {
   @PatchMapping("/{postId}")
   public ResponseEntity<?> updatePost(
       @PathVariable Long postId,
-      @RequestBody PostRequestDto requestDto) {
+      @RequestPart(value = "file", required = false) MultipartFile file,
+      @RequestBody PostRequestDto requestDto) throws IOException {
 
-    postService.updatePost(postId, requestDto);
+    postService.updatePost(postId, requestDto, file);
     return ResponseEntity.ok(ApiResponse.ok("게시글 수정 성공", null));
   }
 

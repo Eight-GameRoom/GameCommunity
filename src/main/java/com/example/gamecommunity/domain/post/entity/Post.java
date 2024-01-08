@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
@@ -65,11 +66,11 @@ public class Post extends TimeStamped {
   private Integer postUnlike;
 
   public Post(PostRequestDto requestDto, GameType gameType, GameName gameName,
-      BoardName boardName) {
+      BoardName boardName, String postImageUrl) {
     this.postId = getPostId();
     this.postTitle = requestDto.postTitle();
     this.postContent = requestDto.postContent();
-    this.postImageUrl = requestDto.postImageUrl();
+    this.postImageUrl = postImageUrl;
     this.postAuthor = "username";
     this.gameType = gameType;
     this.gameName = gameName;
@@ -79,8 +80,9 @@ public class Post extends TimeStamped {
     this.postUnlike = 0;
   }
 
-  public void update(PostRequestDto requestDto) {
+  public void update(PostRequestDto requestDto, String postImageUrl) {
     this.postTitle = requestDto.postTitle();
     this.postContent = requestDto.postContent();
+    this.postImageUrl = postImageUrl;
   }
 }
