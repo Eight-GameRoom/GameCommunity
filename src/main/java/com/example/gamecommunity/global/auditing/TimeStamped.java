@@ -1,4 +1,4 @@
-package com.example.gamecommunity.global.audting;
+package com.example.gamecommunity.global.auditing;
 
 
 import jakarta.persistence.Column;

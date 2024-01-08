@@ -1,5 +1,7 @@
 package com.example.gamecommunity.domain.post.service;
 
+import static com.example.gamecommunity.global.exception.common.ErrorCode.POST_NOT_FOUND_EXCEPTION;
+
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
@@ -7,13 +9,14 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
-import com.example.gamecommunity.global.exception.post.PostNotFoundException;
+import com.example.gamecommunity.global.exception.common.BusinessException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +64,8 @@ public class PostService {
     Sort sort = Sort.by(direction, sortKey);
     Pageable pageable = PageRequest.of(page, size, sort);
 
-    Page<Post> postList = postRepository.findByGameTypeAndGameNameAndBoardName(type, game, board, pageable);
+    Page<Post> postList = postRepository.findByGameTypeAndGameNameAndBoardName(type, game, board,
+        pageable);
 
     return postList.map(PostResponseDto::fromEntity);
   }
@@ -91,7 +95,8 @@ public class PostService {
   }
 
   public Post getFindPost(Long postId) {
-    return postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+    return postRepository.findById(postId)
+        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, POST_NOT_FOUND_EXCEPTION));
   }
 
 }
