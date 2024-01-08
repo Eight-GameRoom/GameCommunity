@@ -1,7 +1,12 @@
 package com.example.gamecommunity.domain.user.service;
 
-import static com.example.gamecommunity.global.exception.common.ErrorCode.*;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_EMAIL_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_AUTHENTICATION_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_EQUALS_CONFIRM_PASSWORD;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_USER_EXCEPTION;
+
 import com.example.gamecommunity.domain.user.dto.LoginRequestDto;
+import com.example.gamecommunity.domain.user.dto.PasswordChangeRequestDto;
 import com.example.gamecommunity.domain.user.dto.SignupRequestDto;
 import com.example.gamecommunity.domain.user.dto.TokenDto;
 import com.example.gamecommunity.domain.user.entity.User;
@@ -17,6 +22,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +62,27 @@ public class UserService {
     return tokenDto;
   }
 
+  @Transactional
+  public void updatePassword(PasswordChangeRequestDto requestDto, Long userId) {
+    String password = passwordEncoder.encode(requestDto.newPassword());
+
+    User user = userRepository.findById(userId).orElseThrow(() ->
+        new BusinessException(HttpStatus.NOT_FOUND,NOT_FOUND_USER_EXCEPTION)
+    );
+
+    //로그인중 유저 패스워드랑 request에 담긴 변경전 패스워드랑 같은지 체크
+    if (!(passwordEncoder.matches(requestDto.nowPassword(), user.getPassword()))) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST,FAILED_AUTHENTICATION_EXCEPTION );
+    }
+
+    //변경할 비번,비번 확인 같은지 체크
+    else if (!(requestDto.newPassword().equals(requestDto.checkPassword()))) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, NOT_EQUALS_CONFIRM_PASSWORD);
+    }
+
+    user.updatePassword(password);
+  }
+
 
   public void emailCheck(String email) {
     if (userRepository.findByEmail(email).isPresent()) {
@@ -68,6 +95,7 @@ public class UserService {
       throw new BusinessException(HttpStatus.BAD_REQUEST, NOT_EQUALS_CONFIRM_PASSWORD);
     }
   }
+
 
   private Authentication createAuthentication(String password, User user) {
     if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -83,6 +111,7 @@ public class UserService {
     SecurityContext context = SecurityContextHolder.getContext();
     context.setAuthentication(authentication);
   }
+
 
 
 }

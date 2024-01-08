@@ -46,5 +46,7 @@ public class User {
   private String profileUrl;
 
 
-
+  public void updatePassword(String password) {
+    this.password = password;
+  }
 }
