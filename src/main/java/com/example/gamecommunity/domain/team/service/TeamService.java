@@ -5,8 +5,10 @@ import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
 import com.example.gamecommunity.domain.team.entity.Team;
 import com.example.gamecommunity.domain.team.repository.TeamRepository;
+import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import com.example.gamecommunity.domain.teamUser.repository.TeamUserRepository;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.exception.common.GlobalExceptionHandler;
@@ -26,6 +28,7 @@ public class TeamService {
 
   private final TeamRepository teamRepository;
   private final TeamUserRepository teamUserRepository;
+  private final UserRepository userRepository;
 
 
   public void createTeam(UserDetailsImpl userDetails, TeamRequestDto teamRequestDto) {
@@ -65,7 +68,7 @@ public class TeamService {
 
     Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
          new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
-    // 유저 본인이 팀의 어드민인 경우만 삭제 가능.
+
     if(user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
@@ -79,7 +82,7 @@ public class TeamService {
 
     Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
-    // 유저 본인이 팀의 어드민인 경우만 삭제 가능.
+
     if(user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
@@ -88,6 +91,21 @@ public class TeamService {
   }
 
   public void addUserToTeam(UserDetailsImpl userDetails, Long teamId, Long userId) {
+    User user = userDetails.getUser();
+
+    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
+
+    if(user.getId().equals(team.getAdminId())){
+      throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
+    }
+
+    User invitedUser = userRepository.findByUserId(userId).orElseThrow(() ->
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION));
+
+    TeamUser teamUser = new TeamUser(team,invitedUser);
+
+    teamUserRepository.save(teamUser);
   }
 
   public void deleteUserFromTeam(UserDetailsImpl userDetails, Long teamId, Long userId) {
