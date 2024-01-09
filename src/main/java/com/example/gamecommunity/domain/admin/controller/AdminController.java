@@ -4,10 +4,9 @@ import com.example.gamecommunity.domain.admin.dto.NoticeRequestDto;
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
 import com.example.gamecommunity.domain.admin.service.AdminService;
 import com.example.gamecommunity.global.response.ApiResponse;
-import lombok.RequiredArgsConstructor;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,8 +24,7 @@ public class AdminController {
 
   @GetMapping("/users")
   public ResponseEntity<ApiResponse> getUsers(
-//      @AuthenticationPrincipal UserDetailsImpl userDetails
-  ) {
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
     var usersDto = adminService.getUsers();
     return ResponseEntity.ok(ApiResponse.ok("유저 정보 목록 조회 성공", usersDto));
   }
