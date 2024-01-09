@@ -46,4 +46,10 @@ public class Team extends TimeStamped {
     this.gameName = teamRequestDto.getGameName();
   }
 
+  public void update(TeamRequestDto teamRequestDto) {
+    this.name = teamRequestDto.getName();
+    this.image = teamRequestDto.getImage();
+    this.introduction = teamRequestDto.getIntroduction();
+    this.gameName = teamRequestDto.getGameName();
+  }
 }

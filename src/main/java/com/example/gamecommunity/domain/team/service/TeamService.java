@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -64,7 +65,7 @@ public class TeamService {
 
     Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
          new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
-    // 유저 본인이 어드민인 경우만 삭제 가능.
+    // 유저 본인이 팀의 어드민인 경우만 삭제 가능.
     if(user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
@@ -72,7 +73,18 @@ public class TeamService {
     teamRepository.delete(team);
   }
 
+  @Transactional
   public void updateTeam(UserDetailsImpl userDetails, Long teamId, TeamRequestDto teamRequestDto) {
+    User user = userDetails.getUser();
+
+    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
+    // 유저 본인이 팀의 어드민인 경우만 삭제 가능.
+    if(user.getId().equals(team.getAdminId())){
+      throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
+    }
+
+    team.update(teamRequestDto);
   }
 
   public void addUserToTeam(UserDetailsImpl userDetails, Long teamId, Long userId) {
