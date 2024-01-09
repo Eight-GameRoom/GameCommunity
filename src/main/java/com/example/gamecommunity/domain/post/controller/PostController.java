@@ -91,9 +91,12 @@ public class PostController {
   // 게시글 삭제
   @DeleteMapping("/{postId}")
   public ResponseEntity<?> deletePost(
-      @PathVariable Long postId) {
+      @PathVariable Long postId,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    postService.deletePost(postId);
+    User loginuser = userDetails.getUser();
+
+    postService.deletePost(postId, loginuser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 삭제 성공", null));
   }
 

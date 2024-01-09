@@ -80,7 +80,7 @@ public class PostService {
     Post post = getFindPost(postId);
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
-    if (!loginuser.getId().equals(post.getPostId())) {
+    if (!loginuser.getNickname().equals(post.getPostAuthor())) {
       throw new BusinessException(HttpStatus.BAD_REQUEST, AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
@@ -95,9 +95,14 @@ public class PostService {
   }
 
   @Transactional
-  public void deletePost(Long postId) {
+  public void deletePost(Long postId, User loginuser) {
 
     Post post = getFindPost(postId);
+
+    // 로그인한 유저와 게시글 작성자와 일치하는지 확인
+    if (!loginuser.getNickname().equals(post.getPostAuthor())) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, AUTHENTICATION_MISMATCH_EXCEPTION);
+    }
 
     postRepository.delete(post);
   }
