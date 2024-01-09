@@ -94,11 +94,12 @@ public class Post extends TimeStamped {
     this.postImageUrl = postImageUrl;
   }
 
-  public void setPostLike(int postLike) {
-    this.postLike = postLike;
-  }
+  public void setPostLike(int postLike) {this.postLike = postLike; }
 
   public void setPostUnlike(int postUnlike) {
     this.postUnlike = postUnlike;
   }
+
+  public void setReport(int report) { this.report = report; }
+
 }
