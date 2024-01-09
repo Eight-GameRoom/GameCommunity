@@ -15,4 +15,7 @@ public record TeamResponseDto(
         team.getIntroduction(),
         team.getGameName());
   }
+
+  public TeamResponseDto(Long aLong) {
+  }
 }

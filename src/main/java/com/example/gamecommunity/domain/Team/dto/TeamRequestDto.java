@@ -1,7 +1,9 @@
 package com.example.gamecommunity.domain.Team.dto;
 
 import com.example.gamecommunity.domain.Team.entity.Team;
+import lombok.Getter;
 
+@Getter
 public record TeamRequestDto(
     String name,
     String image,

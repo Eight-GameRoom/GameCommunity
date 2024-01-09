@@ -7,6 +7,7 @@ import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,10 +28,10 @@ public class TeamController {
   private final TeamService teamService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<TeamResponseDto>>> getTeam(@AuthenticationPrincipal
+  public ResponseEntity<ApiResponse<Map<String,List<TeamResponseDto>>>> getTeam(@AuthenticationPrincipal
   UserDetailsImpl userDetails) {
-    List<TeamResponseDto> teamResponseDtoList = teamService.getTeam(userDetails);
-    return ResponseEntity.ok(ApiResponse.ok("그룹 목록 조회 성공", teamResponseDtoList));
+    Map<String, List<TeamResponseDto>> teamMap = teamService.getTeam(userDetails);
+    return ResponseEntity.ok(ApiResponse.ok("게임 별로 속해 있는 그룹 목록 조회 성공", teamMap));
   }
 
   @GetMapping("/users/{userId}")
