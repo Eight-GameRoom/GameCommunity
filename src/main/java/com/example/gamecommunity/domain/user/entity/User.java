@@ -12,10 +12,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.joda.time.DateTime;
 
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -51,4 +53,7 @@ public class User {
   @OneToMany(mappedBy = "user")
   private List<Post> posts = new ArrayList<>();
 
+  public void updatePassword(String password) {
+    this.password = password;
+  }
 }
