@@ -5,6 +5,7 @@ import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
 import com.example.gamecommunity.domain.team.entity.Team;
 import com.example.gamecommunity.domain.team.repository.TeamRepository;
+import com.example.gamecommunity.domain.teamUser.repository.TeamUserRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.util.HashMap;
@@ -19,35 +20,37 @@ import org.springframework.stereotype.Service;
 public class TeamService {
 
   private final TeamRepository teamRepository;
+  private final TeamUserRepository teamUserRepository;
 
 
   public void createTeam(UserDetailsImpl userDetails, TeamRequestDto teamRequestDto) {
     User user = userDetails.getUser();
-    Team team = new Team(user.getId(),teamRequestDto);
+    Team team = new Team(user.getId(), teamRequestDto);
     teamRepository.save(team);
   }
 
   // 게임별로 가져오기
-  public Map<String,List<TeamResponseDto>> getTeam(UserDetailsImpl userDetails) {
+  public Map<String, List<TeamResponseDto>> getTeam() {
     Map<String, List<TeamResponseDto>> teamMap = new HashMap<>();
     for (GameEnum game : GameEnum.values()) {
       List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByGameName()
           .stream()
           .map(TeamResponseDto::new)
-          .collect(Collectors.toList());
+          .toList();
       teamMap.put(game.getGameName(), teamResponseDtos);
     }
     return teamMap;
   }
 
-  // 유저가 속한 그룹
-  public List<TeamResponseDto> getTeam(UserDetailsImpl userDetails, Long userId) {
+  // 유저 본인이 속한 그룹
+  public List<TeamResponseDto> getTeam(UserDetailsImpl userDetails) {
     User user = userDetails.getUser();
-    List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByUserId(user.getId())
+    List<TeamResponseDto> teamResponseDtos = teamUserRepository.findAllByUserId(user.getId())
+        .stream() // TeamUser Entity가 리스트로 나옴
+        .map(Team -> new TeamResponseDto(Team.getTeam()))
+        .toList();
 
-
-
-    return null;
+    return teamResponseDtos;
   }
 
 

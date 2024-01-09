@@ -27,16 +27,15 @@ public class TeamController {
   private final TeamService teamService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<Map<String,List<TeamResponseDto>>>> getTeam(@AuthenticationPrincipal
-  UserDetailsImpl userDetails) {
-    Map<String, List<TeamResponseDto>> teamMap = teamService.getTeam(userDetails);
+  public ResponseEntity<ApiResponse<Map<String,List<TeamResponseDto>>>> getTeam() {
+    Map<String, List<TeamResponseDto>> teamMap = teamService.getTeam();
     return ResponseEntity.ok(ApiResponse.ok("게임 별로 속해 있는 그룹 목록 조회 성공", teamMap));
   }
 
-  @GetMapping("/users/{userId}")
+  @GetMapping("/users")
   public ResponseEntity<ApiResponse<List<TeamResponseDto>>> getTeam(
-      @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long userId) {
-    List<TeamResponseDto> teamResponseDtoList = teamService.getTeam(userDetails, userId);
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    List<TeamResponseDto> teamResponseDtoList = teamService.getTeam(userDetails);
     return ResponseEntity.ok(ApiResponse.ok("유저가 속한 그룹 목록 조회 성공", teamResponseDtoList));
   }
 
