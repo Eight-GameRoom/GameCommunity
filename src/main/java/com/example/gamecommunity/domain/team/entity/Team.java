@@ -1,6 +1,7 @@
 package com.example.gamecommunity.domain.team.entity;
 
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
+import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "Teams")
+@Table(name = "teams")
 @NoArgsConstructor
 public class Team extends TimeStamped {
   @Id
@@ -35,21 +36,21 @@ public class Team extends TimeStamped {
   private String gameName;
 
 
-//  @OneToMany(mappedBy = "team")
-//  private List<TeamUser> teamUsers = new ArrayList<>();
+  @OneToMany(mappedBy = "team")
+  private List<TeamUser> teamUsers = new ArrayList<>();
 
   public Team(Long adminId, TeamRequestDto teamRequestDto){
     this.adminId = adminId;
-    this.name = teamRequestDto.getName();
-    this.image = teamRequestDto.getImage();
-    this.introduction = teamRequestDto.getIntroduction();
-    this.gameName = teamRequestDto.getGameName();
+    this.name = teamRequestDto.name();
+    this.image = teamRequestDto.image();
+    this.introduction = teamRequestDto.introduction();
+    this.gameName = teamRequestDto.gameName();
   }
 
   public void update(TeamRequestDto teamRequestDto) {
-    this.name = teamRequestDto.getName();
-    this.image = teamRequestDto.getImage();
-    this.introduction = teamRequestDto.getIntroduction();
-    this.gameName = teamRequestDto.getGameName();
+    this.name = teamRequestDto.name();
+    this.image = teamRequestDto.image();
+    this.introduction = teamRequestDto.introduction();
+    this.gameName = teamRequestDto.gameName();
   }
 }

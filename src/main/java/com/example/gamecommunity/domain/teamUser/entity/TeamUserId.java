@@ -11,9 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TeamUserId implements Serializable {
 
-  @Column(name ="team_id")
+
+  @Column
   private Long teamId;
 
-  @Column(name = "user_id")
+
+  @Column
   private Long userId;
 }

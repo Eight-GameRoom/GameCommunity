@@ -3,7 +3,7 @@ package com.example.gamecommunity.domain.team.dto;
 import com.example.gamecommunity.domain.team.entity.Team;
 import lombok.Getter;
 
-@Getter
+
 public record TeamRequestDto(
     String name,
     String image,

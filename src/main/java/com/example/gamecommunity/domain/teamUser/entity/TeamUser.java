@@ -9,12 +9,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "TeamUsers")
+@Table(name = "teamUsers")
 @NoArgsConstructor
 @Getter
 public class TeamUser {
@@ -24,10 +25,12 @@ public class TeamUser {
 
 
   @ManyToOne
+  @MapsId("teamId")
   @JoinColumn(name = "team_id")
   private Team team;
 
   @ManyToOne
+  @MapsId("userId")
   @JoinColumn(name = "user_id")
   private User user;
 

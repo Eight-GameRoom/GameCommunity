@@ -1,15 +1,19 @@
 package com.example.gamecommunity.domain.user.entity;
 
 
+import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import reactor.core.scheduler.Scheduler.Worker;
 
 
 @Getter
@@ -44,6 +48,9 @@ public class User {
 
   @Column()
   private String profileUrl;
+
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL , orphanRemoval = true)
+  private List<TeamUser> teamUsers;
 
 
 
