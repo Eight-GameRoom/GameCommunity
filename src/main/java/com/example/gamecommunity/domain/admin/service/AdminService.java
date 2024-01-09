@@ -1,16 +1,27 @@
 package com.example.gamecommunity.domain.admin.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.example.gamecommunity.domain.admin.dto.AdminUserResponseDto;
 import com.example.gamecommunity.domain.admin.dto.NoticeRequestDto;
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
+import com.example.gamecommunity.domain.enums.boardName.BoardName;
+import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
+import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import jakarta.transaction.Transactional;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,32 +30,18 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
   private final UserRepository userRepository;
-  //private final PostRepository postRepository;
+  private final PostRepository postRepository;
 
   public List<AdminUserResponseDto> getUsers() {
-    return userRepository.findAll().stream().map(u ->
-        AdminUserResponseDto.builder()
-            .email(u.getEmail())
-            .introduction(u.getIntroduction())
-            .ranking(u.getRanking())
-            .nickname(u.getNickname())
-            .profileUrl(u.getProfileUrl())
-            .build()
-    ).toList();
+    return userRepository.findAll().stream().map(AdminUserResponseDto::new).toList();
   }
 
   public AdminUserResponseDto getUser(long userId) {
-    var u = userRepository.findById(userId).orElseThrow(
+    var user = userRepository.findById(userId).orElseThrow(
         () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
     );
 
-    return AdminUserResponseDto.builder()
-        .email(u.getEmail())
-        .introduction(u.getIntroduction())
-        .ranking(u.getRanking())
-        .nickname(u.getNickname())
-        .profileUrl(u.getProfileUrl())
-        .build();
+    return new AdminUserResponseDto(user);
   }
 
   public void deleteUser(long userId) {
@@ -56,28 +53,37 @@ public class AdminService {
     var userId = userBlockRequestDto.userId();
     var blockDate = userBlockRequestDto.blockDate();
 
-    var u = userRepository.findById(userId).orElseThrow(
+    var user = userRepository.findById(userId).orElseThrow(
         () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
     );
 
-    u.setBlockDate(blockDate);
+    DateTime dt = DateTime.parse(blockDate.toString());
+    user.setBlockDate(dt);
   }
 
   public List<PostResponseDto> getReportedPosts() {
-//    postRepository.findAll().stream().map(p->
-//        AdminPostResponseDto.builder()
-//            .postTitle(p.)
-//    )
-    return null;
+    return postRepository.findAll().stream()
+        .filter(p -> p.getReport() > 0)
+        .map(PostResponseDto::fromEntity).toList();
   }
 
   public PostResponseDto getReportedPost(long postId) {
-    return null;
+    var post = postRepository.findById(postId).orElseThrow(
+        () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.POST_NOT_FOUND_EXCEPTION)
+    );
+
+    return PostResponseDto.fromEntity(post);
   }
 
   @Transactional
-  public void writeNotice(NoticeRequestDto noticeRequestDto) {
-    Post post = null;//Post.builder()
-    //postRepository.save(post);
+  public void writeNotice(
+      PostRequestDto requestDto,
+      GameType gameType,
+      GameName gameName,
+      UserDetailsImpl userDetails
+  ) {
+    Post post = new Post(requestDto, gameType, gameName, BoardName.NOTICE_BOARD, "",
+        userDetails.getUser());
+    postRepository.save(post);
   }
 }

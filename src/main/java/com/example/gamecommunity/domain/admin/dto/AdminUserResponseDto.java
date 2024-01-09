@@ -1,8 +1,8 @@
 package com.example.gamecommunity.domain.admin.dto;
 
+import com.example.gamecommunity.domain.user.entity.User;
 import lombok.Builder;
 
-@Builder
 public record AdminUserResponseDto(
     String email,
     String nickname,
@@ -10,5 +10,13 @@ public record AdminUserResponseDto(
     int ranking,
     String profileUrl
 ) {
-
+  public AdminUserResponseDto(User user) {
+    this(
+        user.getEmail(),
+        user.getNickname(),
+        user.getIntroduction(),
+        user.getRanking(),
+        user.getProfileUrl()
+    );
+  }
 }

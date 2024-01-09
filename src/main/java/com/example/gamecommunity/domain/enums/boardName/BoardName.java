@@ -10,7 +10,7 @@ public enum BoardName {
   // 그룹 홍보 게시판
   GROUP_PROMOTION_BOARD,
   // 요청 게시판
-  REQUIRED_BOARD
-
-
+  REQUIRED_BOARD,
+  // 공지 사항
+  NOTICE_BOARD
 }
