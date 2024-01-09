@@ -14,7 +14,7 @@ public record SignupRequestDto(
       @NotBlank(message = "닉네임 공백일 수 없습니다.")
       @Size(min=4, max=10,message ="닉네임 4자 이상 10자 이하이어야 합니다")
       String nickname,
-
+      //나중에 비번 정규식 추가
       @NotBlank(message = "비밀번호 공백일 수 없습니다.")
       String password,
 
