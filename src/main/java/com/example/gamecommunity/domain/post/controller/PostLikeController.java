@@ -1,9 +1,12 @@
 package com.example.gamecommunity.domain.post.controller;
 
 import com.example.gamecommunity.domain.post.service.PostLikeService;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.response.ApiResponse;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +24,12 @@ public class PostLikeController {
   @PostMapping
   public ResponseEntity<?> addLike(
       @PathVariable Long postId,
-      @RequestParam Boolean isLike) {
+      @RequestParam Boolean isLike,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    postLikeService.addLike(postId);
+    User loginUser = userDetails.getUser();
+
+    postLikeService.addLike(postId, isLike,loginUser);
     String message;
 
     if (isLike) {

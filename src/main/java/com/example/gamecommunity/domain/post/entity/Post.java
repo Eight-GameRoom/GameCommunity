@@ -93,4 +93,12 @@ public class Post extends TimeStamped {
     this.postContent = requestDto.postContent();
     this.postImageUrl = postImageUrl;
   }
+
+  public void setPostLike(int postLike) {
+    this.postLike = postLike;
+  }
+
+  public void setPostUnlike(int postUnlike) {
+    this.postUnlike = postUnlike;
+  }
 }
