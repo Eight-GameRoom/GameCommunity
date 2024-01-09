@@ -8,5 +8,11 @@ public record TeamRequestDto(
     String introduction,
     String gameName
 ) {
+  public TeamRequestDto(Team team) {
+    this(team.getName(),
+        team.getImage(),
+        team.getIntroduction(),
+        team.getGameName());
+  }
 
 }
