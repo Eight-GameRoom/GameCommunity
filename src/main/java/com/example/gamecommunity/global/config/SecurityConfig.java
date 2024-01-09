@@ -56,14 +56,13 @@ public class SecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
         );
 
-        http.formLogin((formLogin) ->
-                formLogin
-                        .loginPage("/user/login-page").permitAll()
-        );
+//        http.formLogin((formLogin) ->
+//                formLogin
+//                        .loginPage("/user/login-page").permitAll()
+//        );
 
 
         http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

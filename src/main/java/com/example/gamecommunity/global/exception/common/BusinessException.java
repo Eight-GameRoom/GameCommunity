@@ -15,4 +15,5 @@ public class BusinessException extends RuntimeException{
   public BusinessException(ErrorCode errorCode, Throwable cause) {
     super(errorCode.getMessage(), cause);
   }
+
 }
