@@ -1,6 +1,7 @@
 package com.example.gamecommunity.domain.post.entity;
 
 
+import com.example.gamecommunity.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,10 +31,21 @@ public class PostLike {
   private Long postLikeId;
 
   @Column
-  private Boolean isLike;
+  private Boolean islike;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id", nullable = false)
   private Post post;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  public static PostLike fromUserAndPost(User loginUser, Boolean isLike, Post post) {
+    return PostLike.builder()
+        .user(loginUser)
+        .islike(isLike)
+        .post(post)
+        .build();
+  }
 }

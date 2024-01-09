@@ -1,18 +1,23 @@
 package com.example.gamecommunity.domain.user.entity;
 
 
+import com.example.gamecommunity.domain.post.entity.Post;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.joda.time.DateTime;
 
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -45,6 +50,8 @@ public class User {
   @Column()
   private String profileUrl;
 
+  @OneToMany(mappedBy = "user")
+  private List<Post> posts = new ArrayList<>();
 
   public void updatePassword(String password) {
     this.password = password;

@@ -1,9 +1,12 @@
 package com.example.gamecommunity.domain.post.controller;
 
 import com.example.gamecommunity.domain.post.service.PostReportService;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.response.ApiResponse;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +21,13 @@ public class PostReportController {
 
   // 신고하기
   @PostMapping
-  public ResponseEntity<?> addReport(@PathVariable Long postId) {
+  public ResponseEntity<?> addReport(
+      @PathVariable Long postId,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    postReportService.addReport(postId);
+    User loginUser = userDetails.getUser();
+
+    postReportService.addReport(postId, loginUser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 신고 성공", null));
   }
 
