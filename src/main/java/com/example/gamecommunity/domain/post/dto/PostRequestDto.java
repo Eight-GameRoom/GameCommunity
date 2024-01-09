@@ -1,9 +1,8 @@
 package com.example.gamecommunity.domain.post.dto;
 
-// dto는 record
-
-public record PostRequestDto (
-    String title
+public record PostRequestDto(
+    String postTitle,
+    String postContent
 
 ) {
 
