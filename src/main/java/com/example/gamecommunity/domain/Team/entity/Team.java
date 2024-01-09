@@ -1,6 +1,6 @@
-package com.example.gamecommunity.domain.group.entity;
+package com.example.gamecommunity.domain.Team.entity;
 
-import com.example.gamecommunity.global.common.TimeStamped;
+import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Groups")
-public class Group extends TimeStamped {
+@Table(name = "Teams")
+public class Team extends TimeStamped {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -27,7 +27,7 @@ public class Group extends TimeStamped {
   @Column
   private String gameName;
 
-  @OneToMany(mappedBy = "group")
-  private List<GroupUser> GroupUsers  = new ArrayList<>();
+  @OneToMany(mappedBy = "team")
+  private List<TeamUser> teamUsers = new ArrayList<>();
 
 }
