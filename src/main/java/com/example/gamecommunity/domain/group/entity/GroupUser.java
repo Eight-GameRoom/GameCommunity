@@ -1,7 +1,8 @@
 package com.example.gamecommunity.domain.group.entity;
 
 import com.example.gamecommunity.domain.user.entity.User;
-import com.example.gamecommunity.global.common.TimeStamped;
+
+import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,14 +22,6 @@ public class GroupUser extends TimeStamped {
 
   @Column
   private String role;
-
-  @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
-
-  @ManyToOne
-  @JoinColumn(name = "group_id", nullable = false)
-  private Group group;
 
 
 

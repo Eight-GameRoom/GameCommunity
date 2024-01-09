@@ -32,11 +32,11 @@ public class GroupController {
 
   private final GroupService groupService;
 
-  @GetMapping
-  public ResponseEntity<ApiResponse<List<GroupResponseDto>>> getGroup(User user) {
-    List<GroupResponseDto> groupResponseDtoList = GroupService.getGroup(user);
-    return ResponseEntity.ok(ApiResponse.ok("그룹 목록 조회 성공", groupResponseDtoList));
-  }
+//  @GetMapping
+//  public ResponseEntity<ApiResponse<List<GroupResponseDto>>> getGroup(User user) {
+//    List<GroupResponseDto> groupResponseDtoList = GroupService.getGroup(user);
+//    return ResponseEntity.ok(ApiResponse.ok("그룹 목록 조회 성공", groupResponseDtoList));
+//  }
 
   @GetMapping("/users/{userId}")
   public ResponseEntity<ApiResponse<List<GroupResponseDto>>> getGroup(User user, @PathVariable Long userId) {
