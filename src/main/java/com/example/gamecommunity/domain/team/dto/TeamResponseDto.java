@@ -1,6 +1,6 @@
-package com.example.gamecommunity.domain.Team.dto;
+package com.example.gamecommunity.domain.team.dto;
 
-import com.example.gamecommunity.domain.Team.entity.Team;
+import com.example.gamecommunity.domain.team.entity.Team;
 
 public record TeamResponseDto(
     String name,
@@ -16,6 +16,4 @@ public record TeamResponseDto(
         team.getGameName());
   }
 
-  public TeamResponseDto(Long aLong) {
-  }
 }

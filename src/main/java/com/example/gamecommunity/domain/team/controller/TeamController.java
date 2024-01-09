@@ -1,9 +1,8 @@
-package com.example.gamecommunity.domain.Team.controller;
+package com.example.gamecommunity.domain.team.controller;
 
-import com.example.gamecommunity.domain.Team.dto.TeamRequestDto;
-import com.example.gamecommunity.domain.Team.dto.TeamResponseDto;
-import com.example.gamecommunity.domain.Team.service.TeamService;
-import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
+import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
+import com.example.gamecommunity.domain.team.service.TeamService;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.util.List;

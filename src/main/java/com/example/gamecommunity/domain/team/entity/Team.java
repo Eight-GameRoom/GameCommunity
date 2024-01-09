@@ -1,6 +1,6 @@
-package com.example.gamecommunity.domain.Team.entity;
+package com.example.gamecommunity.domain.team.entity;
 
-import com.example.gamecommunity.domain.Team.dto.TeamRequestDto;
+import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,10 +12,12 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "Teams")
+@NoArgsConstructor
 public class Team extends TimeStamped {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +35,8 @@ public class Team extends TimeStamped {
   private String gameName;
 
 
-  @OneToMany(mappedBy = "team")
-  private List<TeamUser> teamUsers = new ArrayList<>();
+//  @OneToMany(mappedBy = "team")
+//  private List<TeamUser> teamUsers = new ArrayList<>();
 
   public Team(Long adminId, TeamRequestDto teamRequestDto){
     this.adminId = adminId;

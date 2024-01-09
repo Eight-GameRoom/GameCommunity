@@ -1,6 +1,6 @@
-package com.example.gamecommunity.domain.Team.dto;
+package com.example.gamecommunity.domain.team.dto;
 
-import com.example.gamecommunity.domain.Team.entity.Team;
+import com.example.gamecommunity.domain.team.entity.Team;
 import lombok.Getter;
 
 @Getter

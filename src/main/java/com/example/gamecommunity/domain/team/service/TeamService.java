@@ -1,10 +1,10 @@
-package com.example.gamecommunity.domain.Team.service;
+package com.example.gamecommunity.domain.team.service;
 
-import com.example.gamecommunity.domain.Team.GameEnum;
-import com.example.gamecommunity.domain.Team.dto.TeamRequestDto;
-import com.example.gamecommunity.domain.Team.dto.TeamResponseDto;
-import com.example.gamecommunity.domain.Team.entity.Team;
-import com.example.gamecommunity.domain.Team.repository.TeamRepository;
+import com.example.gamecommunity.domain.team.GameEnum;
+import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
+import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
+import com.example.gamecommunity.domain.team.entity.Team;
+import com.example.gamecommunity.domain.team.repository.TeamRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.util.HashMap;
@@ -38,10 +38,15 @@ public class TeamService {
       teamMap.put(game.getGameName(), teamResponseDtos);
     }
     return teamMap;
-
   }
 
+  // 유저가 속한 그룹
   public List<TeamResponseDto> getTeam(UserDetailsImpl userDetails, Long userId) {
+    User user = userDetails.getUser();
+    List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByUserId(user.getId())
+
+
+
     return null;
   }
 

@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.Team;
+package com.example.gamecommunity.domain.team;
 
 import lombok.Getter;
 
