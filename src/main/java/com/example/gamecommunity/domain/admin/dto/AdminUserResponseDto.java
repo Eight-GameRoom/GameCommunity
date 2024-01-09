@@ -3,10 +3,12 @@ package com.example.gamecommunity.domain.admin.dto;
 import lombok.Builder;
 
 @Builder
-public class AdminUserResponseDto {
-  private String email;
-  private String nickname;
-  private String introduction;
-  private int ranking;
-  private String profileUrl;
+public record AdminUserResponseDto(
+    String email,
+    String nickname,
+    String introduction,
+    int ranking,
+    String profileUrl
+) {
+
 }

@@ -1,14 +1,11 @@
 package com.example.gamecommunity.domain.admin.service;
 
-import com.example.gamecommunity.domain.admin.dto.AdminPostResponseDto;
 import com.example.gamecommunity.domain.admin.dto.AdminUserResponseDto;
 import com.example.gamecommunity.domain.admin.dto.NoticeRequestDto;
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
+import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
-import com.example.gamecommunity.domain.post.repository.PostRepository;
-import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
-import com.example.gamecommunity.domain.user.service.UserService;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
 import jakarta.transaction.Transactional;
@@ -56,8 +53,8 @@ public class AdminService {
 
   @Transactional
   public void setBlock(UserBlockRequestDto userBlockRequestDto) {
-    var userId = userBlockRequestDto.getUserId();
-    var blockDate = userBlockRequestDto.getBlockDate();
+    var userId = userBlockRequestDto.userId();
+    var blockDate = userBlockRequestDto.blockDate();
 
     var u = userRepository.findById(userId).orElseThrow(
         () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
@@ -66,7 +63,7 @@ public class AdminService {
     u.setBlockDate(blockDate);
   }
 
-  public List<AdminPostResponseDto> getReportedPosts() {
+  public List<PostResponseDto> getReportedPosts() {
 //    postRepository.findAll().stream().map(p->
 //        AdminPostResponseDto.builder()
 //            .postTitle(p.)
@@ -74,7 +71,7 @@ public class AdminService {
     return null;
   }
 
-  public AdminPostResponseDto getReportedPost(long postId) {
+  public PostResponseDto getReportedPost(long postId) {
     return null;
   }
 

@@ -23,7 +23,8 @@ public class AdminController {
   private AdminService adminService;
 
   @GetMapping("/users")
-  public ResponseEntity<ApiResponse> getUsers(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+  public ResponseEntity<ApiResponse> getUsers(
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
     var usersDto = adminService.getUsers();
     return ResponseEntity.ok(ApiResponse.ok("유저 정보 목록 조회 성공", usersDto));
   }

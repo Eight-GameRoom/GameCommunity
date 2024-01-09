@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.joda.time.DateTime;
 
-@Getter
-@Setter
-public class UserBlockRequestDto {
-  private long userId;
-  private DateTime blockDate;
+public record UserBlockRequestDto(
+
+    long userId,
+    DateTime blockDate
+
+) {
 
 }
