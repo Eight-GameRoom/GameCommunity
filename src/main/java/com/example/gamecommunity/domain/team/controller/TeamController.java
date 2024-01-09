@@ -26,6 +26,13 @@ public class TeamController {
 
   private final TeamService teamService;
 
+  @PostMapping
+  public ResponseEntity<ApiResponse<Void>> createTeam(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      @RequestBody TeamRequestDto teamRequestDto) {
+    teamService.createTeam(userDetails, teamRequestDto);
+    return ResponseEntity.ok(ApiResponse.ok("그룹 생성 성공", null));
+  }
   @GetMapping
   public ResponseEntity<ApiResponse<Map<String,List<TeamResponseDto>>>> getTeam() {
     Map<String, List<TeamResponseDto>> teamMap = teamService.getTeam();
@@ -39,13 +46,7 @@ public class TeamController {
     return ResponseEntity.ok(ApiResponse.ok("유저가 속한 그룹 목록 조회 성공", teamResponseDtoList));
   }
 
-  @PostMapping
-  public ResponseEntity<ApiResponse<Void>> createTeam(
-      @AuthenticationPrincipal UserDetailsImpl userDetails,
-      @RequestBody TeamRequestDto teamRequestDto) {
-    teamService.createTeam(userDetails, teamRequestDto);
-    return ResponseEntity.ok(ApiResponse.ok("그룹 생성 성공", null));
-  }
+
 
   @DeleteMapping("/{teamId}")
   public ResponseEntity<ApiResponse<Void>> deleteTeam(

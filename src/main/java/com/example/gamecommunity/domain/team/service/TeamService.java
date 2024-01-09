@@ -7,12 +7,16 @@ import com.example.gamecommunity.domain.team.entity.Team;
 import com.example.gamecommunity.domain.team.repository.TeamRepository;
 import com.example.gamecommunity.domain.teamUser.repository.TeamUserRepository;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
+import com.example.gamecommunity.global.exception.common.GlobalExceptionHandler;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,6 +59,17 @@ public class TeamService {
 
 
   public void deleteTeam(UserDetailsImpl userDetails, Long teamId) {
+
+    User user = userDetails.getUser();
+
+    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
+    // 유저 본인이 어드민인 경우만 삭제 가능.
+    if(user.getId().equals(team.getAdminId())){
+      throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
+    }
+
+    teamRepository.delete(team);
   }
 
   public void updateTeam(UserDetailsImpl userDetails, Long teamId, TeamRequestDto teamRequestDto) {
