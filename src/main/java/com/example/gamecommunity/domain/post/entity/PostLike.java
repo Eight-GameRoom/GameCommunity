@@ -31,7 +31,7 @@ public class PostLike {
   private Long postLikeId;
 
   @Column
-  private Boolean isLike;
+  private Boolean islike;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id", nullable = false)
@@ -44,7 +44,7 @@ public class PostLike {
   public static PostLike fromUserAndPost(User loginUser, Boolean isLike, Post post) {
     return PostLike.builder()
         .user(loginUser)
-        .isLike(isLike)
+        .islike(isLike)
         .post(post)
         .build();
   }

@@ -7,6 +7,7 @@ import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,4 +42,24 @@ public class PostLikeController {
     return ResponseEntity.ok(ApiResponse.ok(message + " 성공", null));
   }
 
+  // 좋아요 싫어요 취소하기
+  @DeleteMapping
+  public ResponseEntity<?> cancelLike(
+      @PathVariable Long postId,
+      @RequestParam Boolean isLike,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+    User loginUser = userDetails.getUser();
+
+    postLikeService.cancelLike(postId, isLike,loginUser);
+    String message;
+
+    if (isLike) {
+      message = "좋아요";
+    } else {
+      message = "싫어요";
+    }
+
+    return ResponseEntity.ok(ApiResponse.ok(message + " 취소 성공", null));
+  }
 }

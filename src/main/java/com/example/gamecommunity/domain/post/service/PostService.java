@@ -1,7 +1,7 @@
 package com.example.gamecommunity.domain.post.service;
 
 import static com.example.gamecommunity.global.exception.common.ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.POST_NOT_FOUND_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_POST_EXCEPTION;
 
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
@@ -31,6 +31,7 @@ public class PostService {
 
   private final PostImageUploadService postImageUploadService;
 
+  @Transactional
   public void createPost(
       PostRequestDto requestDto,
       GameType gameType,
@@ -67,15 +68,16 @@ public class PostService {
     Sort sort = Sort.by(direction, sortKey);
     Pageable pageable = PageRequest.of(page, size, sort);
 
-    Page<Post> postList = postRepository.findByGameTypeAndGameNameAndBoardName(type, game, board,
-        pageable);
+    Page<Post> postList = postRepository
+        .findByGameTypeAndGameNameAndBoardName(type, game, board, pageable);
 
     return postList.map(PostResponseDto::fromEntity);
   }
 
   @Transactional
   public void updatePost(
-      Long postId, PostRequestDto requestDto, MultipartFile file, User loginuser) throws IOException {
+      Long postId, PostRequestDto requestDto, MultipartFile file, User loginuser)
+      throws IOException {
 
     Post post = getFindPost(postId);
 
@@ -109,7 +111,7 @@ public class PostService {
 
   public Post getFindPost(Long postId) {
     return postRepository.findById(postId)
-        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, POST_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, NOT_FOUND_POST_EXCEPTION));
   }
 
 }
