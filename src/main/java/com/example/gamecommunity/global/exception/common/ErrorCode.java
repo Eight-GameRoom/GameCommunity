@@ -16,7 +16,8 @@ public enum ErrorCode {
 
   // team
   NOT_FOUND_TEAM_EXCEPTION("해당 팀이 존재하지 않습니다."),
-  NOT_EQUALS_TEAM_ADMIN("팀의 관리자가 아닙니다.");
+  NOT_EQUALS_TEAM_ADMIN("팀의 관리자가 아닙니다."),
+  NOT_FOUND_TEAM_USER("팀에 유저가 속해있지 않습니다.");
 
 
   private final String message;

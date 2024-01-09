@@ -109,5 +109,24 @@ public class TeamService {
   }
 
   public void deleteUserFromTeam(UserDetailsImpl userDetails, Long teamId, Long userId) {
+
+    User user = userDetails.getUser();
+
+    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
+
+    if(user.getId().equals(team.getAdminId())){
+      throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
+    }
+
+    User deletedUser = userRepository.findByUserId(userId).orElseThrow(() ->
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION));
+
+
+
+    TeamUser teamUser = teamUserRepository.findByTeamAndUser(team, deletedUser).orElseThrow(() ->
+        new BusinessException(HttpStatus.NOT_FOUND,ErrorCode.NOT_FOUND_TEAM_USER));
+
+    teamUserRepository.delete(teamUser);
   }
 }
