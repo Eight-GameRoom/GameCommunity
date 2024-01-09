@@ -100,7 +100,7 @@ public class TeamService {
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
 
-    User invitedUser = userRepository.findByUserId(userId).orElseThrow(() ->
+    User invitedUser = userRepository.findById(userId).orElseThrow(() ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION));
 
     TeamUser teamUser = new TeamUser(team,invitedUser);
@@ -119,7 +119,7 @@ public class TeamService {
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
 
-    User deletedUser = userRepository.findByUserId(userId).orElseThrow(() ->
+    User deletedUser = userRepository.findById(userId).orElseThrow(() ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION));
 
 
