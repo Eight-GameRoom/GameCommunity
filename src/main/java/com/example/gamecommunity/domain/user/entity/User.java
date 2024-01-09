@@ -1,9 +1,12 @@
 package com.example.gamecommunity.domain.user.entity;
 
 
+import com.example.gamecommunity.domain.post.entity.Post;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +50,8 @@ public class User {
   @Column()
   private String profileUrl;
 
+  @OneToMany(mappedBy = "user")
+  private List<Post> posts = new ArrayList<>();
 
   public void updatePassword(String password) {
     this.password = password;
