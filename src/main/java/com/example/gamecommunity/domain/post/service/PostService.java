@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.post.service;
 
+import static com.example.gamecommunity.global.exception.common.ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.POST_NOT_FOUND_EXCEPTION;
 
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
@@ -74,11 +75,16 @@ public class PostService {
 
   @Transactional
   public void updatePost(
-      Long postId, PostRequestDto requestDto, MultipartFile file) throws IOException {
+      Long postId, PostRequestDto requestDto, MultipartFile file, User loginuser) throws IOException {
 
     Post post = getFindPost(postId);
 
-    String imageUrl = null;
+    // 로그인한 유저와 게시글 작성자와 일치하는지 확인
+    if (!loginuser.getId().equals(post.getPostId())) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, AUTHENTICATION_MISMATCH_EXCEPTION);
+    }
+
+    String imageUrl = post.getPostImageUrl();
 
     // 파일이 존재하는 경우에만 이미지 업로드를 수행
     if (file != null && !file.isEmpty()) {

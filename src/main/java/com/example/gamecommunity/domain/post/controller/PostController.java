@@ -78,10 +78,13 @@ public class PostController {
   @PatchMapping("/{postId}")
   public ResponseEntity<?> updatePost(
       @PathVariable Long postId,
+      @RequestPart(value = "requestDto") PostRequestDto requestDto,
       @RequestPart(value = "file", required = false) MultipartFile file,
-      @RequestBody PostRequestDto requestDto) throws IOException {
+      @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    postService.updatePost(postId, requestDto, file);
+    User loginuser = userDetails.getUser();
+
+    postService.updatePost(postId, requestDto, file, loginuser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 수정 성공", null));
   }
 
