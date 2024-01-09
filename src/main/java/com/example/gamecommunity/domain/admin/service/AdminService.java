@@ -69,7 +69,7 @@ public class AdminService {
 
   public PostResponseDto getReportedPost(long postId) {
     var post = postRepository.findById(postId).orElseThrow(
-        () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.POST_NOT_FOUND_EXCEPTION)
+        () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_POST_EXCEPTION)
     );
 
     return PostResponseDto.fromEntity(post);
