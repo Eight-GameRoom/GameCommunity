@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.user.controller;
 
+import com.example.gamecommunity.domain.user.dto.EmailDto;
 import com.example.gamecommunity.domain.user.dto.LoginRequestDto;
 import com.example.gamecommunity.domain.user.dto.PasswordChangeRequestDto;
 import com.example.gamecommunity.domain.user.dto.SignupRequestDto;
@@ -31,10 +32,30 @@ public class UserController {
   // 회원가입
   @PostMapping("/signup")
   public ResponseEntity<ApiResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+
     userService.signup(requestDto);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("회원가입 성공.", null));
   }
+
+  // 이메일 발송
+  @PostMapping ("/signup/email")
+  public ResponseEntity<ApiResponse> emailSend(@Valid @RequestBody EmailDto.Request requestDto){
+
+    userService.emailSend(requestDto.email());
+
+    return ResponseEntity.ok(ApiResponse.ok("이메일 인증번호 발송 성공.", null));
+  }
+
+  // 이메일 인증 확인
+  @PostMapping("/signup/emailauthcheck")
+  public ResponseEntity<ApiResponse> emailAuthCheck(@Valid @RequestBody EmailDto.CheckRequest requestDto){
+    userService.emailAuthCheck(requestDto);
+
+    return ResponseEntity.ok(ApiResponse.ok("이메일 인증 성공.", null));
+  }
+
+
 
   //로그인
   @PostMapping("/login")
