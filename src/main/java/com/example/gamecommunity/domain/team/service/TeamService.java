@@ -41,7 +41,7 @@ public class TeamService {
   public Map<String, List<TeamResponseDto>> getTeam() {
     Map<String, List<TeamResponseDto>> teamMap = new HashMap<>();
     for (GameEnum game : GameEnum.values()) {
-      List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByGameName()
+      List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByGameName(game.getGameName())
           .stream()
           .map(TeamResponseDto::new)
           .toList();
@@ -66,7 +66,7 @@ public class TeamService {
 
     User user = userDetails.getUser();
 
-    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+    Team team = teamRepository.findById(teamId).orElseThrow( () ->
          new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
     if(user.getId().equals(team.getAdminId())){
@@ -80,7 +80,7 @@ public class TeamService {
   public void updateTeam(UserDetailsImpl userDetails, Long teamId, TeamRequestDto teamRequestDto) {
     User user = userDetails.getUser();
 
-    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+    Team team = teamRepository.findById(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
     if(user.getId().equals(team.getAdminId())){
@@ -93,7 +93,7 @@ public class TeamService {
   public void addUserToTeam(UserDetailsImpl userDetails, Long teamId, Long userId) {
     User user = userDetails.getUser();
 
-    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+    Team team = teamRepository.findById(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
     if(user.getId().equals(team.getAdminId())){
@@ -112,7 +112,7 @@ public class TeamService {
 
     User user = userDetails.getUser();
 
-    Team team = teamRepository.findByTeamId(teamId).orElseThrow( () ->
+    Team team = teamRepository.findById(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
     if(user.getId().equals(team.getAdminId())){
