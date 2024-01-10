@@ -47,6 +47,14 @@ public class UserController {
     return ResponseEntity.ok(ApiResponse.ok("이메일 인증번호 발송 성공.", null));
   }
 
+  // 이메일 인증 확인
+  @PostMapping("/signup/emailauthcheck")
+  public ResponseEntity<ApiResponse> emailAuthCheck(@Valid @RequestBody EmailDto.CheckRequest requestDto){
+    userService.emailAuthCheck(requestDto);
+
+    return ResponseEntity.ok(ApiResponse.ok("이메일 인증 성공.", null));
+  }
+
 
 
   //로그인

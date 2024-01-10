@@ -1,8 +1,15 @@
 package com.example.gamecommunity.domain.user.service;
 
-import static com.example.gamecommunity.global.exception.common.ErrorCode.*;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_EMAIL_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_NICKNAME_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.EMAIL_VERIFICATION_NEEDED;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_AUTHENTICATION_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_AUTHENTICATION_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_SEND_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_USER_EXCEPTION;
 
-
+import com.example.gamecommunity.domain.user.dto.EmailDto.CheckRequest;
 import com.example.gamecommunity.domain.user.dto.LoginRequestDto;
 import com.example.gamecommunity.domain.user.dto.PasswordChangeRequestDto;
 import com.example.gamecommunity.domain.user.dto.SignupRequestDto;
@@ -13,6 +20,7 @@ import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import com.example.gamecommunity.global.util.JwtUtil;
 import com.example.gamecommunity.global.util.RandomNumber;
+import com.example.gamecommunity.global.util.RedisUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +45,18 @@ public class UserService {
   private final JavaMailSender mailSender;
 
   private final JwtUtil jwtUtil;
+  private final RedisUtil redisUtil;
 
   @Value("${spring.mail.username}")
   private String senderEmail;
 
   public void signup(SignupRequestDto requestDto) {
-    emailCheck(requestDto.email());
+    if(redisUtil.getData(requestDto.email()) == null){
+      throw new BusinessException(HttpStatus.BAD_REQUEST,EMAIL_VERIFICATION_NEEDED );
+    }
+
+    idEmailUnique(requestDto.email());
+    isNicknameUnique(requestDto.nickname());
     confirmPassword(requestDto);
 
     User user = requestDto.toEntity(passwordEncoder.encode(requestDto.password()),
@@ -51,11 +65,13 @@ public class UserService {
     userRepository.save(user);
   }
 
+
+
   public void emailSend(String toEmail) {
     //JavaMailSender 객체를 사용하여 MimeMessage 객체를 생성
     MimeMessage message = mailSender.createMimeMessage();
     String authNumber = RandomNumber.createNumber();
-    String content = "인증 번호:"+authNumber;
+    String content = "회원 가입 인증 번호: "+authNumber;
 
     try {
       // true를 전달하여 multipart 형식의 메시지를 지원, "utf-8"을 전달하여 문자 인코딩을 설정
@@ -66,14 +82,29 @@ public class UserService {
       helper.setSubject("게임 커뮤니티 회원 가입 인증 이메일");//이메일의 제목을 설정
       helper.setText(content,true);//이메일의 내용 설정 두 번째 매개 변수에 true를 설정하여 html 설정으로한다.
       mailSender.send(message);
-    } catch (MessagingException e) {//이메일 서버에 연결할 수 없거나, 잘못된 이메일 주소를 사용하거나, 인증 오류가 발생하는 등 오류
-      throw  new BusinessException(HttpStatus.BAD_REQUEST,FAILED_EMAIL_SEND_EXCEPTION);
+    } catch (MessagingException e) {
+      //이메일 서버에 연결할 수 없거나, 잘못된 이메일 주소를 사용하거나, 인증 오류가 발생하는 등 오류
+      throw new BusinessException(HttpStatus.BAD_REQUEST,FAILED_EMAIL_SEND_EXCEPTION);
+    }
+
+    redisUtil.setDataExpire(toEmail,authNumber,60*5L); //5분후 만료
+  }
+
+  public void emailAuthCheck(CheckRequest requestDto) {
+    String RedisAuthNumber = redisUtil.getData(requestDto.email());
+
+    if(RedisAuthNumber.equals(requestDto.authNum())){
+      redisUtil.deleteData(requestDto.email());
+      // 이메일 인증 완료 했는데 회원가입 요청을 3시간동안 안하면 다시 이메일 인증하도록 하기
+      redisUtil.setDataExpire(requestDto.email(),"true",60*60*3L);
+    }
+    else{
+      throw new BusinessException(HttpStatus.BAD_REQUEST,FAILED_EMAIL_AUTHENTICATION_EXCEPTION );
     }
   }
 
 
   public TokenDto login(LoginRequestDto requestDto) {
-
     String email = requestDto.email();
     String password = requestDto.password();
 
@@ -113,9 +144,15 @@ public class UserService {
   }
 
 
-  public void emailCheck(String email) {
+  public void idEmailUnique(String email) {
     if (userRepository.findByEmail(email).isPresent()) {
       throw new BusinessException(HttpStatus.CONFLICT, ALREADY_EXIST_USER_EMAIL_EXCEPTION);
+    }
+  }
+
+  private void isNicknameUnique(String nickname) {
+    if(userRepository.findByNickname(nickname).isPresent()){
+      throw new BusinessException(HttpStatus.CONFLICT, ALREADY_EXIST_USER_NICKNAME_EXCEPTION);
     }
   }
 
