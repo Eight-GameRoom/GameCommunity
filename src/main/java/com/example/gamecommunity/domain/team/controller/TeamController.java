@@ -71,7 +71,7 @@ public class TeamController {
     return ResponseEntity.ok(ApiResponse.ok("그룹에 유저 추가 성공", null));
   }
 
-  @DeleteMapping("/Teams/{TeamId}/users/{userId}")
+  @DeleteMapping("/Teams/{teamId}/users/{userId}")
   public ResponseEntity<ApiResponse<Void>> DeleteUserFromTeam(
       @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long teamId,
       @PathVariable Long userId) {
