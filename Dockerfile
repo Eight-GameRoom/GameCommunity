@@ -1,4 +1,4 @@
 FROM openjdk:17-alpine
 ARG JAR_FILE=*.jar
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar", "--spring.config.location=file:/resources/application.properties"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
