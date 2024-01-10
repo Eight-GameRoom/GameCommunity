@@ -10,7 +10,7 @@ name: GameCommunity
 # PR이 닫힐 때 깃허브 액션 돌아감
 on:
   push:
-    branches: [ "feature/ci_cd" ]
+    branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
     types: [closed]
