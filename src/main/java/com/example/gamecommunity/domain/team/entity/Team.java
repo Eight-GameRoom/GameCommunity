@@ -1,8 +1,11 @@
 package com.example.gamecommunity.domain.team.entity;
 
+import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.team.GameEnum;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import com.example.gamecommunity.global.auditing.TimeStamped;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,19 +27,19 @@ public class Team extends TimeStamped {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column
+  @Column(nullable = false)
   private Long adminId;
-  @Column
+  @Column(nullable = false, unique = true)
   private String name;
   @Column
   private String image;
   @Column
   private String introduction;
-  @Column
+  @Column(nullable = false)
   private String gameName;
 
 
-  @OneToMany(mappedBy = "team")
+  @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TeamUser> teamUsers = new ArrayList<>();
 
   public Team(Long adminId, TeamRequestDto teamRequestDto){
