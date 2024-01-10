@@ -5,6 +5,7 @@ import com.example.gamecommunity.domain.post.entity.Post;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -42,7 +43,7 @@ public class User {
   private String introduction;
 
   @Column()
-  private DateTime blockDate;
+  private Instant blockDate;
 
   @Column(nullable = false)
   private int ranking;
