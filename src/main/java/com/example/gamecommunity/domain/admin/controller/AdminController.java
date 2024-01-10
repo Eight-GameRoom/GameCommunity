@@ -69,7 +69,7 @@ public class AdminController {
 
   @PostMapping("/notices")
   public ResponseEntity<ApiResponse> writeNotice(
-      @RequestPart(value = "requestDto") PostRequestDto requestDto,
+      @RequestBody PostRequestDto requestDto,
       @RequestParam(required = false) GameType gameType,
       @RequestParam(required = false) GameName gameName,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
