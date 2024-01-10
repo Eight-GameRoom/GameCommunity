@@ -1,4 +1,4 @@
-package com.example.gamecommunity.global.redis;
+package com.example.gamecommunity.global.util;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MailRedisUtil {
+public class RedisUtil {
   //Redis에 접근하기 위한 Spring의 Redis 템플릿 클래스
   private final StringRedisTemplate redisTemplate;
+
 
   //지정된 키(key)에 해당하는 데이터를 Redis에서 가져오는 메서드
   public String getData(String key){
