@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.post.entity;
 
+import com.example.gamecommunity.domain.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,4 +32,14 @@ public class PostReport {
   @JoinColumn(name = "post_id", nullable = false)
   private Post post;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  public static PostReport fromUserAndPost(User loginUser, Post post) {
+    return PostReport.builder()
+        .user(loginUser)
+        .post(post)
+        .build();
+  }
 }

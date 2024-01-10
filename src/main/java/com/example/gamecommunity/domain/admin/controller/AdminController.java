@@ -3,8 +3,13 @@ package com.example.gamecommunity.domain.admin.controller;
 import com.example.gamecommunity.domain.admin.dto.NoticeRequestDto;
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
 import com.example.gamecommunity.domain.admin.service.AdminService;
+import com.example.gamecommunity.domain.enums.boardName.BoardName;
+import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,17 +19,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
-  private AdminService adminService;
+  private final AdminService adminService;
 
   @GetMapping("/users")
-  public ResponseEntity<ApiResponse> getUsers(
-      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+  public ResponseEntity<ApiResponse> getUsers() {
     var usersDto = adminService.getUsers();
     return ResponseEntity.ok(ApiResponse.ok("유저 정보 목록 조회 성공", usersDto));
   }
@@ -61,8 +68,12 @@ public class AdminController {
   }
 
   @PostMapping("/notices")
-  public ResponseEntity<ApiResponse> writeNotice(@RequestBody NoticeRequestDto noticeRequestDto) {
-    adminService.writeNotice(noticeRequestDto);
+  public ResponseEntity<ApiResponse> writeNotice(
+      @RequestPart(value = "requestDto") PostRequestDto requestDto,
+      @RequestParam(required = false) GameType gameType,
+      @RequestParam(required = false) GameName gameName,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    adminService.writeNotice(requestDto, gameType, gameName, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("공지사항 작성 성공", null));
   }
 }
