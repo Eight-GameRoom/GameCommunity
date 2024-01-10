@@ -17,7 +17,6 @@ on:
 
 jobs:
   build-docker-image:
-    if: github.event.pull_request.merged == true # PR이 머지가 됬을 때(승인)
     runs-on: ubuntu-latest
 
     steps: 
