@@ -57,7 +57,7 @@ public class UserService {
 
     idEmailUnique(requestDto.email());
     isNicknameUnique(requestDto.nickname());
-    confirmPassword(requestDto);
+    confirmPassword(requestDto.password(),requestDto.checkPassword());
 
     User user = requestDto.toEntity(passwordEncoder.encode(requestDto.password()),
         requestDto.imageName());
@@ -136,9 +136,7 @@ public class UserService {
     }
 
     //변경할 비번,비번 확인 같은지 체크
-    else if (!(requestDto.newPassword().equals(requestDto.checkPassword()))) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION);
-    }
+    confirmPassword(requestDto.newPassword(),requestDto.checkPassword());
 
     user.updatePassword(password);
   }
@@ -156,8 +154,8 @@ public class UserService {
     }
   }
 
-  public void confirmPassword(SignupRequestDto requestDto) {
-    if (!(requestDto.password().equals(requestDto.checkPassword()))) {
+  public void confirmPassword(String password, String checkPassword) {
+    if (!(password.equals(checkPassword))) {
       throw new BusinessException(HttpStatus.BAD_REQUEST, NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION);
     }
   }
