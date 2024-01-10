@@ -35,6 +35,7 @@ public class TeamService {
     User user = userDetails.getUser();
     Team team = new Team(user.getId(), teamRequestDto);
     teamRepository.save(team);
+    addUserToTeam(userDetails,team.getId(),user.getId());
   }
 
   // 게임별로 가져오기
@@ -69,7 +70,7 @@ public class TeamService {
     Team team = teamRepository.findById(teamId).orElseThrow( () ->
          new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
-    if(user.getId().equals(team.getAdminId())){
+    if(!user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
 
@@ -83,7 +84,7 @@ public class TeamService {
     Team team = teamRepository.findById(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
-    if(user.getId().equals(team.getAdminId())){
+    if(!user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
 
@@ -96,7 +97,7 @@ public class TeamService {
     Team team = teamRepository.findById(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
-    if(user.getId().equals(team.getAdminId())){
+    if(!user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
 
@@ -115,7 +116,7 @@ public class TeamService {
     Team team = teamRepository.findById(teamId).orElseThrow( () ->
         new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_TEAM_EXCEPTION));
 
-    if(user.getId().equals(team.getAdminId())){
+    if(!user.getId().equals(team.getAdminId())){
       throw new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_EQUALS_TEAM_ADMIN);
     }
 
