@@ -77,5 +77,7 @@ public class User {
   public void updatePassword(String password) {
     this.password = password;
   }
-
+  public void addKakaoId(Long kakaoId){
+    this.kakaoId = kakaoId;
+  }
 }
