@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.example.gamecommunity.domain.common.CommonTest;
+import com.example.gamecommunity.domain.test.PostTest;
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
@@ -16,6 +16,7 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
+import com.example.gamecommunity.domain.test.UserTest;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
@@ -41,7 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 @DisplayName("게시글 서비스 테스트")
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-class PostServiceTest implements CommonTest {
+class PostServiceTest implements PostTest, UserTest {
 
   @InjectMocks
   private PostService postService;
@@ -57,7 +58,7 @@ class PostServiceTest implements CommonTest {
     // given
     PostRequestDto requestDto = new PostRequestDto(TEST_POST_TITLE, TEST_POST_CONTENT);
     MultipartFile file = mock(MultipartFile.class);
-    User loginUser = mock(User.class);
+    User loginUser = TEST_USER;
 
     given(postImageUploadService.uploadFile(file)).willReturn(TEST_POST_IMAGE_URL);
 
@@ -108,6 +109,7 @@ class PostServiceTest implements CommonTest {
   @Test
   @DisplayName("게시글 페이징 조회 - 성공")
   void getPostsTestSuccess() {
+
     // given
     int page = 1;
     int size = 10;
@@ -127,11 +129,60 @@ class PostServiceTest implements CommonTest {
         .willReturn(postPage);
 
     // when
-    Page<PostResponseDto> result = postService.getPosts(page, size, sortKey, isAsc, type, game, board);
+    Page<PostResponseDto> result = postService.getPosts(page, size, sortKey, isAsc, type, game,
+        board);
 
     // then
     assertEquals(postPage.getTotalElements(), result.getTotalElements());
     assertEquals(postPage.getContent().size(), result.getContent().size());
-
   }
+
+  @Test
+  @DisplayName("게시글 수정 - 성공")
+  void updatePostTestSuccess() throws IOException {
+
+    // given
+    Long postId = TEST_POST_ID;
+    Post post = TEST_POST;
+    User loginUser = TEST_USER;
+    MultipartFile file = mock(MultipartFile.class);
+
+    PostRequestDto requestDto = new PostRequestDto(
+        TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
+
+    given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+    // when
+    postService.updatePost(postId, requestDto, file, loginUser);
+
+    // then
+    assertEquals(TEST_ANOTHER_POST.getPostTitle(), post.getPostTitle());
+    assertEquals(TEST_ANOTHER_POST.getPostContent(), post.getPostContent());
+  }
+
+  @Test
+  @DisplayName("게시글 수정 - 실패(로그한 유저가 게시글 작성자가 아님")
+  void updatePostTestFailureNotAuth() throws IOException {
+
+    // given
+    Long postId = TEST_POST_ID;
+    Post post = TEST_POST;
+    User loginUser = TEST_ANOTHER_USER;
+    MultipartFile file = mock(MultipartFile.class);
+
+    PostRequestDto requestDto = new PostRequestDto(
+        TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
+
+    given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+    // when, then
+    BusinessException exception = assertThrows(BusinessException.class, () -> {
+      postService.updatePost(postId, requestDto, file, loginUser);
+    });
+
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), exception.getMessage());
+  }
+
+
 }
