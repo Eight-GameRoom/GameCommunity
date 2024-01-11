@@ -60,7 +60,7 @@ public class JwtUtil {
             .compact();
   }
 
-  public String createRefreshToken(String email,UserRoleEnum role) {
+  public String createRefreshToken(String email, UserRoleEnum role) {
     Date date = new Date();
 
     return BEARER_PREFIX +
@@ -102,19 +102,31 @@ public class JwtUtil {
 
   // 토큰에서 사용자 정보 가져오기
   public Claims getUserInfoFromToken(String token) {
-    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody(); // body안에 claim기반 데이터 반환
+    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
+        .getBody(); // body안에 claim기반 데이터 반환
   }
 
   public void setTokenResponse(TokenDto tokenDto, HttpServletResponse response) {
     setHeaderAccessToken(tokenDto.accessToken(), response);
-    setHeaderRefreshToken(tokenDto.refreshToken(),response);
+    setHeaderRefreshToken(tokenDto.refreshToken(), response);
 
   }
 
   private void setHeaderAccessToken(String accessToken, HttpServletResponse response) {
     response.setHeader(Access_Header, accessToken);
   }
+
   private void setHeaderRefreshToken(String refreshToken, HttpServletResponse response) {
     response.setHeader(Refresh_Header, refreshToken);
+  }
+
+  public Long getExpiration(String refreshToken) {
+    // 리프레시 토큰 만료시간
+    Date expiration = Jwts.parserBuilder().setSigningKey(key).build()
+        .parseClaimsJws(refreshToken.substring(7)).getBody()
+        .getExpiration();
+    //현재시간
+    long now = new Date().getTime();
+    return (expiration.getTime() - now);
   }
 }
