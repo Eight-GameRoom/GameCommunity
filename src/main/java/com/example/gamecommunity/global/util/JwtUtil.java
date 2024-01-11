@@ -1,6 +1,7 @@
 package com.example.gamecommunity.global.util;
 
 import com.example.gamecommunity.domain.user.dto.TokenDto;
+import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -29,6 +30,9 @@ public class JwtUtil {
 
   public static final String BEARER_PREFIX = "Bearer ";
 
+  // 사용자 권한 값의 KEY
+  public static final String AUTHORIZATION_KEY = "auth";
+
   private final long TOKEN_TIME = 60 * 60 * 3 * 1000L;
   private final long REFRESH_TOKEN_TIME = 60 * 60 * 24 * 1000L;
 
@@ -43,24 +47,26 @@ public class JwtUtil {
     key = Keys.hmacShaKeyFor(bytes);
   }
 
-  public String createAccessToken(String email) {
+  public String createAccessToken(String email, UserRoleEnum role) {
     Date date = new Date();
 
     return BEARER_PREFIX +
         Jwts.builder()
             .setSubject(email)
+            .claim(AUTHORIZATION_KEY, role)
             .setExpiration(new Date(date.getTime() + TOKEN_TIME))
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)
             .compact();
   }
 
-  public String createRefreshToken(String email) {
+  public String createRefreshToken(String email,UserRoleEnum role) {
     Date date = new Date();
 
     return BEARER_PREFIX +
         Jwts.builder()
             .setSubject(email)
+            .claim(AUTHORIZATION_KEY, role)
             .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)

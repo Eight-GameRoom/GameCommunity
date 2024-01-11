@@ -3,6 +3,7 @@ package com.example.gamecommunity.domain.user.service;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_EMAIL_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_NICKNAME_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.EMAIL_VERIFICATION_NEEDED;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_ADMIN_PASSWORD_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_AUTHENTICATION_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_AUTHENTICATION_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_SEND_EXCEPTION;
@@ -15,6 +16,7 @@ import com.example.gamecommunity.domain.user.dto.PasswordChangeRequestDto;
 import com.example.gamecommunity.domain.user.dto.SignupRequestDto;
 import com.example.gamecommunity.domain.user.dto.TokenDto;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
@@ -47,6 +49,9 @@ public class UserService {
   private final JwtUtil jwtUtil;
   private final RedisUtil redisUtil;
 
+  @Value("${admin.token}")
+  private String ADMIN_TOKEN;
+
   @Value("${spring.mail.username}")
   private String senderEmail;
 
@@ -59,7 +64,15 @@ public class UserService {
     isNicknameUnique(requestDto.nickname());
     confirmPassword(requestDto.password(),requestDto.checkPassword());
 
-    User user = requestDto.toEntity(passwordEncoder.encode(requestDto.password()));
+    UserRoleEnum role = UserRoleEnum.USER;
+    if (requestDto.Admin()) {
+      if (!ADMIN_TOKEN.equals(requestDto.AdminToken())) {
+        throw new BusinessException(HttpStatus.BAD_REQUEST,FAILED_ADMIN_PASSWORD_EXCEPTION );
+      }
+      role = UserRoleEnum.ADMIN;
+    }
+
+    User user = requestDto.toEntity(passwordEncoder.encode(requestDto.password()),role);
 
     userRepository.save(user);
   }
@@ -115,8 +128,8 @@ public class UserService {
     Authentication authentication = createAuthentication(password, user);
     setAuthentication(authentication);
 
-    TokenDto tokenDto = TokenDto.of(jwtUtil.createAccessToken(email),
-        jwtUtil.createRefreshToken(email));
+    TokenDto tokenDto = TokenDto.of(jwtUtil.createAccessToken(email,user.getRole()),
+        jwtUtil.createRefreshToken(email,user.getRole()));
 
     return tokenDto;
   }
