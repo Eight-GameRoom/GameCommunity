@@ -1,15 +1,12 @@
 package com.example.gamecommunity.domain.post.service;
 
-import static com.example.gamecommunity.global.exception.common.ErrorCode.DUPLICATED_LIKE_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_LIKE_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.SELF_LIKE_EXCEPTION;
-
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.entity.PostLike;
 import com.example.gamecommunity.domain.post.repository.PostLikeRepository;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,12 +29,12 @@ public class PostLikeService {
 
     // 현재 로그인한 유저와 게시글의 생성자가 같다면 예외발생
     if (loginUser.getId().equals(post.getUser().getId())) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, SELF_LIKE_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.SELF_LIKE_EXCEPTION);
     }
 
     // 좋아요 또는 싫어요 내역이 있으면 예외발생
     if (postLikeRepository.existsByUserAndPost(loginUser, post)) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, DUPLICATED_LIKE_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.DUPLICATED_LIKE_EXCEPTION);
     }
 
     PostLike postLike = PostLike.fromUserAndPost(loginUser, isLike, post);
@@ -57,14 +54,15 @@ public class PostLikeService {
 
     // 좋아요 또는 싫어요 내역이 없으면 예외발생
     PostLike postLike = postLikeRepository.findByUserAndIslikeAndPost(loginUser, isLike, post)
-        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, NOT_FOUND_LIKE_EXCEPTION));
+        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST,
+            ErrorCode.NOT_FOUND_LIKE_EXCEPTION));
 
     postLikeRepository.delete(postLike);
 
-      // 좋아요 또는 싫어요 수 감소
-      updatePostLikeMinus(post, isLike);
+    // 좋아요 또는 싫어요 수 감소
+    updatePostLikeMinus(post, isLike);
 
-      postRepository.save(post);
+    postRepository.save(post);
   }
 
   private void updatePostLikePlus(Post post, Boolean isLike) {

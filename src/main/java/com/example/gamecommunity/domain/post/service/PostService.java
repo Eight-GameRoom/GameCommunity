@@ -1,8 +1,5 @@
 package com.example.gamecommunity.domain.post.service;
 
-import static com.example.gamecommunity.global.exception.common.ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_POST_EXCEPTION;
-
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
@@ -12,6 +9,7 @@ import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -83,7 +81,8 @@ public class PostService {
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
     if (!loginuser.getNickname().equals(post.getPostAuthor())) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, AUTHENTICATION_MISMATCH_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST,
+          ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
     String imageUrl = post.getPostImageUrl();
@@ -103,7 +102,8 @@ public class PostService {
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
     if (!loginuser.getNickname().equals(post.getPostAuthor())) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, AUTHENTICATION_MISMATCH_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST,
+          ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
     postRepository.delete(post);
@@ -111,7 +111,8 @@ public class PostService {
 
   public Post getFindPost(Long postId) {
     return postRepository.findById(postId)
-        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, NOT_FOUND_POST_EXCEPTION));
+        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST,
+            ErrorCode.NOT_FOUND_POST_EXCEPTION));
   }
 
 }
