@@ -63,7 +63,7 @@ public class TeamController {
     return ResponseEntity.ok(ApiResponse.ok("그룹 수정 성공", null));
   }
 
-  @PostMapping("/Teams/{teamId}/users/{userId}")
+  @PostMapping("/teams/{teamId}/users/{userId}")
   public ResponseEntity<ApiResponse<Void>> addUserToTeam(
       @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long teamId,
       @PathVariable Long userId) {
@@ -71,7 +71,7 @@ public class TeamController {
     return ResponseEntity.ok(ApiResponse.ok("그룹에 유저 추가 성공", null));
   }
 
-  @DeleteMapping("/Teams/{teamId}/users/{userId}")
+  @DeleteMapping("/teams/{teamId}/users/{userId}")
   public ResponseEntity<ApiResponse<Void>> DeleteUserFromTeam(
       @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long teamId,
       @PathVariable Long userId) {
