@@ -25,6 +25,7 @@ public interface CommonTest {
   Integer POST_Unlike = 0;
 
   Post TEST_POST = Post.builder()
+      .postId(TEST_POST_ID)
       .postTitle(TEST_POST_TITLE)
       .postContent(TEST_POST_CONTENT)
       .postImageUrl(TEST_POST_IMAGE_URL)
@@ -38,6 +39,7 @@ public interface CommonTest {
       .build();
 
   Post TEST_ANOTHER_POST = Post.builder()
+      .postId(TEST_ANOTHER_POST_ID)
       .postTitle(ANOTHER_PREFIX + TEST_POST_TITLE)
       .postContent(ANOTHER_PREFIX + TEST_POST_CONTENT)
       .postImageUrl(ANOTHER_PREFIX + TEST_POST_IMAGE_URL)
