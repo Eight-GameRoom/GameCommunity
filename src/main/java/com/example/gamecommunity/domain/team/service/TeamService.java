@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.team.service;
 
+import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.team.GameEnum;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
@@ -39,14 +40,14 @@ public class TeamService {
   }
 
   // 게임별로 가져오기
-  public Map<String, List<TeamResponseDto>> getTeam() {
-    Map<String, List<TeamResponseDto>> teamMap = new HashMap<>();
-    for (GameEnum game : GameEnum.values()) {
-      List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByGameName(game.getGameName())
+  public Map<GameName, List<TeamResponseDto>> getTeam() {
+    Map<GameName, List<TeamResponseDto>> teamMap = new HashMap<>();
+    for (GameName game : GameName.values()) {
+      List<TeamResponseDto> teamResponseDtos = teamRepository.findAllByGameName(game)
           .stream()
           .map(TeamResponseDto::new)
           .toList();
-      teamMap.put(game.getGameName(), teamResponseDtos);
+      teamMap.put(game, teamResponseDtos);
     }
     return teamMap;
   }

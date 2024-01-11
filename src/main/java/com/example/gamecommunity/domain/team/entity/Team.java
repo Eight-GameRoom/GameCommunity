@@ -8,6 +8,8 @@ import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,8 +37,10 @@ public class Team extends TimeStamped {
   private String image;
   @Column
   private String introduction;
+
   @Column(nullable = false)
-  private String gameName;
+  @Enumerated(EnumType.STRING)
+  private GameName gameName;
 
 
   @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)

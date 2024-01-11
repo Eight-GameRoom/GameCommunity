@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.team.controller;
 
+import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
 import com.example.gamecommunity.domain.team.service.TeamService;
@@ -34,8 +35,8 @@ public class TeamController {
     return ResponseEntity.ok(ApiResponse.ok("그룹 생성 성공", null));
   }
   @GetMapping
-  public ResponseEntity<ApiResponse<Map<String,List<TeamResponseDto>>>> getTeam() {
-    Map<String, List<TeamResponseDto>> teamMap = teamService.getTeam();
+  public ResponseEntity<ApiResponse<Map<GameName,List<TeamResponseDto>>>> getTeam() {
+    Map<GameName, List<TeamResponseDto>> teamMap = teamService.getTeam();
     return ResponseEntity.ok(ApiResponse.ok("게임 별로 속해 있는 그룹 목록 조회 성공", teamMap));
   }
 

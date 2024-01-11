@@ -1,12 +1,13 @@
 package com.example.gamecommunity.domain.team.dto;
 
+import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.team.entity.Team;
 
 public record TeamResponseDto(
     String name,
     String image,
     String introduction,
-    String gameName
+    GameName gameName
 ) {
 
   public TeamResponseDto(Team team) {
