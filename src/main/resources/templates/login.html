@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<!--<span th:text="${@environment.getProperty('kakao.rest_api_key')}"></span>-->
+<button id="login-kakao-btn" onclick="redirectToKakao()">
+  카카오로 로그인하기
+</button>
+
+<script>
+  function redirectToKakao() {
+    // 서버에서 전달된 값을 사용
+    var clientId = "${kakaoRestApiKey}";
+    var redirectUri = "${kakaoRedirectUri}";
+
+    // 리다이렉트
+    location.href = 'https://kauth.kakao.com/oauth/authorize?client_id='+clientId +'&redirect_uri='+redirectUri+'&response_type=code';
+  }
+</script>
+</body>
+</html>
+
