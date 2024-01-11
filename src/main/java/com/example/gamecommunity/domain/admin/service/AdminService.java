@@ -1,9 +1,6 @@
 package com.example.gamecommunity.domain.admin.service;
 
-import static java.util.stream.Collectors.toList;
-
 import com.example.gamecommunity.domain.admin.dto.AdminUserResponseDto;
-import com.example.gamecommunity.domain.admin.dto.NoticeRequestDto;
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
@@ -17,12 +14,9 @@ import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import jakarta.transaction.Transactional;
-import java.sql.Timestamp;
 import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
