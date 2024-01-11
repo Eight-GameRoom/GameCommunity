@@ -46,7 +46,14 @@ public class GuestBookService {
 
   }
 
+  @Transactional
+  public void deleteComment(Long guestbookId) {
 
+    GuestBook guestBook = guestBookRepository.findById(guestbookId).orElseThrow(
+            NotFoundGuestBookException::new);
+
+    guestBookRepository.delete(guestBook);
+  }
 
 
 

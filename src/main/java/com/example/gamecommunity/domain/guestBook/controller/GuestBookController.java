@@ -48,6 +48,15 @@ public class GuestBookController {
     return ResponseEntity.ok("방명록 수정 완료");
   }
 
+  // 방명록 댓글 삭제
+  @DeleteMapping("/{toUserId}/guestbooks/{guestbookId}")
+  public ResponseEntity<String> deleteComment(
+          @PathVariable Long guestbookId
+  ) {
+    guestBookService.deleteComment(guestbookId);
+
+    return ResponseEntity.ok("방명록 삭제 성공");
+  }
 
 
 }
