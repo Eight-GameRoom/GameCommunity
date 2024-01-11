@@ -80,10 +80,11 @@ class PostServiceTest implements PostTest, UserTest {
     given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
     // when
-    postService.getPost(postId);
+    PostResponseDto result = postService.getPost(postId);
 
     // then
-    verify(postRepository, times(1)).findById(postId);
+    assertEquals(post.getPostTitle(), result.postTitle());
+    assertEquals(post.getPostContent(), result.postContent());
   }
 
   @Test
