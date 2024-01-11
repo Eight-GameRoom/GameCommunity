@@ -53,9 +53,7 @@ public class PostLikeService {
     Post post = postService.getFindPost(postId);
 
     // 좋아요 또는 싫어요 내역이 없으면 예외발생
-    PostLike postLike = postLikeRepository.findByUserAndIslikeAndPost(loginUser, isLike, post)
-        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST,
-            ErrorCode.NOT_FOUND_LIKE_EXCEPTION));
+    PostLike postLike = postLikeRepository.findByUserAndIslikeAndPost(loginUser, isLike, post);
 
     postLikeRepository.delete(postLike);
 

@@ -104,4 +104,29 @@ class PostLikeServiceTest implements PostTest {
     assertEquals(ErrorCode.DUPLICATED_LIKE_EXCEPTION.getMessage(), ex.getMessage());
   }
 
+  @Test
+  @DisplayName("게시글 좋아요 또는 싫어요 취소 - 성공")
+  void cancelLikeTestSuccess() {
+
+    // given
+    Long postId = TEST_POST_ID;
+    Post post = TEST_ANOTHER_POST;
+    User loginUser = TEST_USER;
+    Boolean islike = true;
+
+    PostLike postLike = new PostLike(1L, islike, post, loginUser);
+
+    given(postService.getFindPost(postId)).willReturn(post);
+    given(postLikeRepository.findByUserAndIslikeAndPost(loginUser, islike, post))
+        .willReturn(postLike);
+
+    // when
+    assertDoesNotThrow(() -> postLikeService.cancelLike(postId, islike, loginUser));
+
+    // then
+    verify(postLikeRepository, times(1)).delete(postLike);
+    verify(postRepository, times(1)).save(post);
+    assertEquals(TEST_POST_LIKE - 1, post.getPostLike());
+  }
+
 }
