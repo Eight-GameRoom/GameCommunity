@@ -16,7 +16,6 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
-import com.example.gamecommunity.domain.test.UserTest;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
@@ -42,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 @DisplayName("게시글 서비스 테스트")
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-class PostServiceTest implements PostTest, UserTest {
+class PostServiceTest implements PostTest {
 
   @InjectMocks
   private PostService postService;
@@ -63,7 +62,7 @@ class PostServiceTest implements PostTest, UserTest {
     given(postImageUploadService.uploadFile(file)).willReturn(TEST_POST_IMAGE_URL);
 
     // when
-    postService.createPost(requestDto, GAME_TYPE, GAME_NAME, BOARD_NAME, file, loginUser);
+    postService.createPost(requestDto, TEST_GAME_TYPE, TEST_GAME_NAME, TEST_BOARD_NAME, file, loginUser);
 
     // Then
     verify(postImageUploadService, times(1)).uploadFile(file);
@@ -97,12 +96,12 @@ class PostServiceTest implements PostTest, UserTest {
 
     // when, then
     // 예외가 발생하는지 확인하는 로직
-    BusinessException exception = assertThrows(BusinessException.class, () -> {
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
       postService.getPost(postId);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-    assertEquals(ErrorCode.NOT_FOUND_POST_EXCEPTION.getMessage(), exception.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.NOT_FOUND_POST_EXCEPTION.getMessage(), ex.getMessage());
 
     verify(postRepository, times(1)).findById(postId);
   }
@@ -177,12 +176,12 @@ class PostServiceTest implements PostTest, UserTest {
     given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
     // when, then
-    BusinessException exception = assertThrows(BusinessException.class, () -> {
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
       postService.updatePost(postId, requestDto, file, loginUser);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), exception.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
 
   @Test
@@ -215,12 +214,12 @@ class PostServiceTest implements PostTest, UserTest {
     given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
     // when, then
-    BusinessException exception = assertThrows(BusinessException.class, () -> {
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
       postService.deletePost(postId, loginUser);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), exception.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
 
 }
