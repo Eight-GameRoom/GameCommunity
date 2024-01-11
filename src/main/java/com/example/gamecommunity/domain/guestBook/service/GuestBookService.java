@@ -6,8 +6,10 @@ import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
 import com.example.gamecommunity.domain.guestBook.repository.GuestBookRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.service.UserService;
+import com.example.gamecommunity.global.exception.guestbook.NotFoundGuestBookException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,4 +35,21 @@ public class GuestBookService {
 
     return CreateGuestBookDto.Response.from(savedGuestBook);
   }
+
+  @Transactional
+  public void modifyComment(Long guestbookId, String content) {
+
+    GuestBook guestBook = guestBookRepository.findById(guestbookId).orElseThrow(
+            NotFoundGuestBookException::new);
+
+    guestBook.modifyComment(content);
+
+  }
+
+
+
+
+
+
+
 }

@@ -21,7 +21,10 @@ public enum ErrorCode {
   FAILED_EMAIL_SEND_EXCEPTION("이메일 서버 문제 or 잘못된 이메일 주소 입니다"),
   FAILED_EMAIL_AUTHENTICATION_EXCEPTION("이메일 인증번호 일치하지 않습니다."),
   EMAIL_VERIFICATION_NEEDED("이메일 인증이 필요 합니다"),
-  AUTHENTICATION_MISMATCH_EXCEPTION("수정 및 삭제 권한이 없습니다.");
+  AUTHENTICATION_MISMATCH_EXCEPTION("수정 및 삭제 권한이 없습니다."),
+
+  // guestbook
+  NOT_FOUND_GUESTBOOK_EXCEPTION("해당 방명록을 찾을 수 없습니다.");
 
   private final String message;
 
