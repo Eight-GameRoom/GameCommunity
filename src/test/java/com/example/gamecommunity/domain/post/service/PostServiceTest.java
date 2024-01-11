@@ -184,5 +184,42 @@ class PostServiceTest implements PostTest, UserTest {
     assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), exception.getMessage());
   }
 
+  @Test
+  @DisplayName("게시글 삭제 - 성공")
+  void deletePostTestSuccess() {
+
+    // given
+    Long postId = TEST_POST_ID;
+    Post post = TEST_POST;
+    User loginUser = TEST_USER;
+
+    given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+    // when
+    postService.deletePost(postId, loginUser);
+
+    // then
+    verify(postRepository, times(1)).delete(post);
+  }
+
+  @Test
+  @DisplayName("게시글 삭제 - 실패(로그한 유저가 게시글 작성자가 아님")
+  void deletePostTestFailureNotAuth() {
+
+    // given
+    Long postId = TEST_POST_ID;
+    Post post = TEST_POST;
+    User loginUser = TEST_ANOTHER_USER;
+
+    given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+    // when, then
+    BusinessException exception = assertThrows(BusinessException.class, () -> {
+      postService.deletePost(postId, loginUser);
+    });
+
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), exception.getMessage());
+  }
 
 }
