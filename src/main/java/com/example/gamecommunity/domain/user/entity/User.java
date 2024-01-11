@@ -1,6 +1,8 @@
 package com.example.gamecommunity.domain.user.entity;
 
 
+
+import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import com.example.gamecommunity.domain.post.entity.Post;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
@@ -15,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.joda.time.DateTime;
+import reactor.core.scheduler.Scheduler.Worker;
 
 
 @Getter
@@ -51,8 +54,14 @@ public class User {
   @Column()
   private String profileUrl;
 
+
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL , orphanRemoval = true)
+  private List<TeamUser> teamUsers;
+
+
   @OneToMany(mappedBy = "user")
   private List<Post> posts = new ArrayList<>();
+
 
   public void updatePassword(String password) {
     this.password = password;
