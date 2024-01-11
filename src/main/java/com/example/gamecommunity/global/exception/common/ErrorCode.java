@@ -13,6 +13,7 @@ public enum ErrorCode {
   DUPLICATED_REPORT_EXCEPTION("이미 신고한 내역이 있습니다."),
 
   // user
+  FAILED_ADMIN_PASSWORD_EXCEPTION("관리자 암호 인증 실패해서 가입이 불가능합니다."),
   ALREADY_EXIST_USER_EMAIL_EXCEPTION("이미 존재하는 이메일 입니다."),
   ALREADY_EXIST_USER_NICKNAME_EXCEPTION("이미 존재하는 닉네임 입니다."),
   NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION("비밀번호 확인이 일치하지 않습니다."),
