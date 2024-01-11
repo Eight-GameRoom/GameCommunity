@@ -59,8 +59,7 @@ public class UserService {
     isNicknameUnique(requestDto.nickname());
     confirmPassword(requestDto.password(),requestDto.checkPassword());
 
-    User user = requestDto.toEntity(passwordEncoder.encode(requestDto.password()),
-        requestDto.imageName());
+    User user = requestDto.toEntity(passwordEncoder.encode(requestDto.password()));
 
     userRepository.save(user);
   }
