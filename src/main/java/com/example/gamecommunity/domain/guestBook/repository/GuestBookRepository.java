@@ -1,5 +1,8 @@
 package com.example.gamecommunity.domain.guestBook.repository;
 
-public class GuestBookRepository {
+import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface GuestBookRepository extends JpaRepository<GuestBook, Long> {
 
 }

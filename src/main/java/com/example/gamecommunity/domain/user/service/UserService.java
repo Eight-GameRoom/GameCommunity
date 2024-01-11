@@ -17,6 +17,7 @@ import com.example.gamecommunity.domain.user.dto.TokenDto;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.user.NotFoundUserException;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import com.example.gamecommunity.global.util.JwtUtil;
 import com.example.gamecommunity.global.util.RandomNumber;
@@ -176,4 +177,11 @@ public class UserService {
     context.setAuthentication(authentication);
   }
 
+  public User findById(Long userId) {
+      return userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+  }
+
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
+  }
 }
