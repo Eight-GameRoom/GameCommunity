@@ -146,9 +146,7 @@ public class OAuthService {
       if (sameEmailUser != null) {
         kakaoUser = sameEmailUser;
         // 기존 회원정보에 카카오 Id 추가
-        kakaoUser = kakaoUser.builder()
-                    .kakaoId(kakaoId)
-                    .build();
+        kakaoUser.addKakaoId(kakaoId);
       } else {
         // 신규 회원가입
         // password: random UUID
