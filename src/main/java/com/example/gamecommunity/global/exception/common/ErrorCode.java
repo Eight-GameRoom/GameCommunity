@@ -27,6 +27,9 @@ public enum ErrorCode {
   LOGIN_REQUIRED_EXCEPTION("리프레시 토큰 문제 있으니 다시 로그인 해주세요."),
   AUTHENTICATION_MISMATCH_EXCEPTION("수정 및 삭제 권한이 없습니다."),
 
+  // guestbook
+  NOT_FOUND_GUESTBOOK_EXCEPTION("해당 방명록을 찾을 수 없습니다."),
+
   // team
   NOT_FOUND_TEAM_EXCEPTION("해당 팀이 존재하지 않습니다."),
   NOT_EQUALS_TEAM_ADMIN("팀의 관리자가 아닙니다."),
