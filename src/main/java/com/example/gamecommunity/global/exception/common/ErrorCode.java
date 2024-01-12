@@ -26,6 +26,9 @@ public enum ErrorCode {
   INVALID_TOKEN_EXCEPTION("유효하지 않은 토큰 입니다."),
   AUTHENTICATION_MISMATCH_EXCEPTION("권한이 일치하지 않습니다."),
 
+  // guestbook
+  NOT_FOUND_GUESTBOOK_EXCEPTION("해당 방명록을 찾을 수 없습니다."),
+
   // team
   NOT_FOUND_TEAM_EXCEPTION("해당 팀이 존재하지 않습니다."),
   NOT_EQUALS_TEAM_ADMIN("팀의 관리자가 아닙니다."),
