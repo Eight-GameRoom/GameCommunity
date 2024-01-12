@@ -5,6 +5,7 @@ import static com.example.gamecommunity.domain.test.PostTest.TEST_GAME_TYPE;
 import static com.example.gamecommunity.domain.test.PostTest.TEST_POST_CONTENT;
 import static com.example.gamecommunity.domain.test.PostTest.TEST_POST_TITLE;
 import static com.example.gamecommunity.domain.test.PostTest.TEST_USER;
+import static com.example.gamecommunity.domain.test.UserTest.TEST_ADMIN_USER;
 import static com.example.gamecommunity.domain.test.UserTest.TEST_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,6 +23,7 @@ import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -48,6 +50,7 @@ class AdminServiceTest {
 
   private User user;
   private Post post;
+  private UserDetailsImpl userDetails;
 
   @BeforeEach
   void makeUser() {
@@ -57,6 +60,11 @@ class AdminServiceTest {
         .password("1234")
         .nickname("test")
         .build();
+  }
+
+  @BeforeEach
+  void makeAdminUser() {
+    userDetails = new UserDetailsImpl(TEST_ADMIN_USER);
   }
 
   @BeforeEach
@@ -84,7 +92,7 @@ class AdminServiceTest {
     given(userRepository.findAll()).willReturn(users);
 
     // when
-    var ret = adminService.getUsers();
+    var ret = adminService.getUsers(userDetails);
 
     // then
     assertEquals(ret.size(), users.size());
@@ -96,7 +104,7 @@ class AdminServiceTest {
     given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
 
     // when
-    var ret = adminService.getUser(user.getId());
+    var ret = adminService.getUser(userDetails, user.getId());
 
     // then
     assertEquals(ret.email(), user.getEmail());
@@ -107,7 +115,7 @@ class AdminServiceTest {
     // given
     given(userRepository.findById(TEST_USER_ID)).willReturn(Optional.of(TEST_USER));
 
-    adminService.deleteUser(TEST_USER_ID);
+    adminService.deleteUser(userDetails, TEST_USER_ID);
 
     verify(userRepository, times(1)).deleteById(TEST_USER_ID);
   }
@@ -123,8 +131,8 @@ class AdminServiceTest {
     UserBlockRequestDto userBlockRequestDto = new UserBlockRequestDto(user.getId(), now);
 
     // when
-    adminService.setBlock(userBlockRequestDto);
-    var ret = adminService.getUser(user.getId());
+    adminService.setBlock(userDetails, userBlockRequestDto);
+    var ret = adminService.getUser(userDetails, user.getId());
 
     // then
     assertEquals(ret.blockDate(), instant);
@@ -143,7 +151,7 @@ class AdminServiceTest {
     given(postRepository.findAll()).willReturn(posts);
 
     // when
-    var ret = adminService.getReportedPosts();
+    var ret = adminService.getReportedPosts(userDetails);
 
     // then
     assertEquals(ret.get(0).report(), report_cnt);
@@ -157,7 +165,7 @@ class AdminServiceTest {
     given(postRepository.findById(1L)).willReturn(Optional.of(post));
 
     // when
-    var ret = adminService.getReportedPost(1L);
+    var ret = adminService.getReportedPost(userDetails, 1L);
 
     // then
     assertEquals(ret.report(), report_cnt);
@@ -167,11 +175,9 @@ class AdminServiceTest {
   void writeNotice() {
     // given
     PostRequestDto requestDto = new PostRequestDto(TEST_POST_TITLE, TEST_POST_CONTENT);
-    MultipartFile file = mock(MultipartFile.class);
-    User loginUser = TEST_USER;
 
     // when
-    adminService.writeNotice(requestDto, TEST_GAME_TYPE, TEST_GAME_NAME, loginUser);
+    adminService.writeNotice(userDetails, requestDto, TEST_GAME_TYPE, TEST_GAME_NAME);
 
     // Then
     verify(postRepository, times(1)).save(any(Post.class));
