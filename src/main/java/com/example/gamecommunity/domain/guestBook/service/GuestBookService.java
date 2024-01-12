@@ -7,6 +7,7 @@ import com.example.gamecommunity.domain.guestBook.repository.GuestBookRepository
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.service.UserService;
 import com.example.gamecommunity.global.exception.guestbook.NotFoundGuestBookException;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,11 @@ public class GuestBookService {
   public Response createComment(
           Long toUserId,
           CreateGuestBookDto.Request createGuestBookDto,
-          String fromUserEmail
+          UserDetailsImpl userDetails
   ) {
 
     User toUser = userService.findById(toUserId);
-    User fromUser = userService.findByEmail(fromUserEmail);
+    User fromUser = userDetails.getUser();
 
     GuestBook guestBook = createGuestBookDto.toEntity(createGuestBookDto.content(), toUser, fromUser);
 

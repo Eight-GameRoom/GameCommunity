@@ -32,7 +32,7 @@ public class GuestBookController {
           @AuthenticationPrincipal UserDetailsImpl userDetails
   ) {
 
-    CreateGuestBookDto.Response responseDto = guestBookService.createComment(toUserId, createGuestBookDto, userDetails.getUsername());
+    CreateGuestBookDto.Response responseDto = guestBookService.createComment(toUserId, createGuestBookDto, userDetails);
 
     return ResponseEntity.ok(responseDto);
   }
