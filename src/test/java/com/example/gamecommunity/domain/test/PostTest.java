@@ -60,11 +60,11 @@ public interface PostTest extends UserTest {
       .build();
 
   PostResponseDto TEST_RESPONSE_DTO = PostResponseDto.builder()
-      .postId(TEST_ANOTHER_POST_ID)
-      .postTitle(ANOTHER_PREFIX + TEST_POST_TITLE)
-      .postContent(ANOTHER_PREFIX + TEST_POST_CONTENT)
-      .postImageUrl(ANOTHER_PREFIX + TEST_POST_IMAGE_URL)
-      .postAuthor(ANOTHER_PREFIX + TEST_USER.getNickname())
+      .postId(TEST_POST_ID)
+      .postTitle(TEST_POST_TITLE)
+      .postContent(TEST_POST_CONTENT)
+      .postImageUrl(TEST_POST_IMAGE_URL)
+      .postAuthor(TEST_USER.getNickname())
       .gameType(TEST_GAME_TYPE)
       .gameName(TEST_GAME_NAME)
       .boardName(TEST_BOARD_NAME)

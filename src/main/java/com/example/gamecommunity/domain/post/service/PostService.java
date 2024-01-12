@@ -118,7 +118,7 @@ public class PostService {
 
   public Post getFindPost(Long postId) {
     return postRepository.findById(postId)
-        .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST,
+        .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND,
             ErrorCode.NOT_FOUND_POST_EXCEPTION));
   }
 
