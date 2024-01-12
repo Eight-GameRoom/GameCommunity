@@ -1,15 +1,6 @@
 package com.example.gamecommunity.domain.user.service;
 
-import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_EMAIL_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.ALREADY_EXIST_USER_NICKNAME_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.EMAIL_VERIFICATION_NEEDED;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_ADMIN_PASSWORD_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_AUTHENTICATION_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_AUTHENTICATION_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_SEND_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.INVALID_TOKEN_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION;
-import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_USER_EXCEPTION;
+
 
 import com.example.gamecommunity.domain.user.dto.EmailDto.CheckRequest;
 import com.example.gamecommunity.domain.user.dto.LoginRequestDto;
@@ -20,6 +11,7 @@ import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.exception.user.NotFoundUserException;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import com.example.gamecommunity.global.util.JwtUtil;
@@ -61,7 +53,7 @@ public class UserService {
 
   public void signup(SignupRequestDto requestDto) {
     if (redisUtil.getData(requestDto.email()) == null) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, EMAIL_VERIFICATION_NEEDED);
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.EMAIL_VERIFICATION_NEEDED);
     }
 
     idEmailUnique(requestDto.email());
@@ -71,7 +63,8 @@ public class UserService {
     UserRoleEnum role = UserRoleEnum.USER;
     if (requestDto.Admin()) {
       if (!ADMIN_TOKEN.equals(requestDto.AdminToken())) {
-        throw new BusinessException(HttpStatus.BAD_REQUEST, FAILED_ADMIN_PASSWORD_EXCEPTION);
+        throw new BusinessException(HttpStatus.BAD_REQUEST,
+            ErrorCode.FAILED_ADMIN_PASSWORD_EXCEPTION);
       }
       role = UserRoleEnum.ADMIN;
     }
@@ -99,7 +92,7 @@ public class UserService {
       mailSender.send(message);
     } catch (MessagingException e) {
       //이메일 서버에 연결할 수 없거나, 잘못된 이메일 주소를 사용하거나, 인증 오류가 발생하는 등 오류
-      throw new BusinessException(HttpStatus.BAD_REQUEST, FAILED_EMAIL_SEND_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.FAILED_EMAIL_SEND_EXCEPTION);
     }
 
     redisUtil.setDataExpire(toEmail, authNumber, 60 * 5L); //5분후 만료
@@ -113,7 +106,8 @@ public class UserService {
       // 이메일 인증 완료 했는데 회원가입 요청을 3시간동안 안하면 다시 이메일 인증하도록 하기
       redisUtil.setDataExpire(requestDto.email(), "true", 60 * 60 * 3L);
     } else {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, FAILED_EMAIL_AUTHENTICATION_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST,
+          ErrorCode.FAILED_EMAIL_AUTHENTICATION_EXCEPTION);
     }
   }
 
@@ -123,7 +117,7 @@ public class UserService {
     String password = requestDto.password();
 
     User user = userRepository.findByEmail(email).orElseThrow(
-        () -> new BusinessException(HttpStatus.BAD_REQUEST, NOT_FOUND_USER_EXCEPTION));
+        () -> new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_USER_EXCEPTION));
 
     Authentication authentication = createAuthentication(password, user);
     setAuthentication(authentication);
@@ -133,8 +127,9 @@ public class UserService {
 
     // 레디스에서 리프레시 토큰 ttl 적용하기 위해
     Long refreshExpiration = jwtUtil.getExpiration(tokenDto.refreshToken());
+
     // 리프레시 토큰 ttl
-    redisUtil.setDataExpire(email,tokenDto.refreshToken(),refreshExpiration);
+    redisUtil.setDataExpire(email, tokenDto.refreshToken(), refreshExpiration);
 
     return tokenDto;
   }
@@ -144,12 +139,13 @@ public class UserService {
     String password = passwordEncoder.encode(requestDto.newPassword());
 
     User user = userRepository.findById(userId).orElseThrow(() ->
-        new BusinessException(HttpStatus.NOT_FOUND, NOT_FOUND_USER_EXCEPTION)
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
     );
 
     //로그인중 유저 패스워드랑 request에 담긴 변경전 패스워드랑 같은지 체크
     if (!(passwordEncoder.matches(requestDto.nowPassword(), user.getPassword()))) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, FAILED_AUTHENTICATION_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST,
+          ErrorCode.FAILED_AUTHENTICATION_EXCEPTION);
     }
 
     //변경할 비번,비번 확인 같은지 체크
@@ -162,7 +158,7 @@ public class UserService {
     String accessToken = jwtUtil.getJWtAccessHeader(request);
 
     if (!jwtUtil.validateToken(accessToken)) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST,INVALID_TOKEN_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_TOKEN_EXCEPTION);
     }
     Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
     String email = claims.getSubject();
@@ -170,28 +166,55 @@ public class UserService {
     redisUtil.deleteData(email);
   }
 
+  public TokenDto reissue(HttpServletRequest request) {
+    String RefreshToken = jwtUtil.getJWtRefreshHeader(request);
+    UserRoleEnum role = jwtUtil.getUserRole(RefreshToken);
+
+    if (!jwtUtil.validateToken(RefreshToken)) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_TOKEN_EXCEPTION);
+    }
+
+    Claims claims = jwtUtil.getUserInfoFromToken(RefreshToken);
+    String email = claims.getSubject();
+
+    // 레디스에 해당 key:email,value:리프레시토큰 있나 확인
+    if (redisUtil.getData(email) == null) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.LOGIN_REQUIRED_EXCEPTION);
+    }
+    // 리프레시토큰은 새로 갱신 안하고 그대로 반환 (로그아웃 말고는 24시간후 무조건 다시 로그인 하기)
+    TokenDto tokenDto = TokenDto.of(jwtUtil.createAccessToken(email, role),
+        request.getHeader("Refresh"));
+
+    return tokenDto;
+  }
+
+
   public void idEmailUnique(String email) {
     if (userRepository.findByEmail(email).isPresent()) {
-      throw new BusinessException(HttpStatus.CONFLICT, ALREADY_EXIST_USER_EMAIL_EXCEPTION);
+      throw new BusinessException(HttpStatus.CONFLICT,
+          ErrorCode.ALREADY_EXIST_USER_EMAIL_EXCEPTION);
     }
   }
 
   private void isNicknameUnique(String nickname) {
     if (userRepository.findByNickname(nickname).isPresent()) {
-      throw new BusinessException(HttpStatus.CONFLICT, ALREADY_EXIST_USER_NICKNAME_EXCEPTION);
+      throw new BusinessException(HttpStatus.CONFLICT,
+          ErrorCode.ALREADY_EXIST_USER_NICKNAME_EXCEPTION);
     }
   }
 
   public void confirmPassword(String password, String checkPassword) {
     if (!(password.equals(checkPassword))) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST,
+          ErrorCode.NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION);
     }
   }
 
 
   private Authentication createAuthentication(String password, User user) {
     if (!passwordEncoder.matches(password, user.getPassword())) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST, FAILED_AUTHENTICATION_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST,
+          ErrorCode.FAILED_AUTHENTICATION_EXCEPTION);
     }
 
     UserDetailsImpl userDetails = new UserDetailsImpl(user);
@@ -204,6 +227,7 @@ public class UserService {
     context.setAuthentication(authentication);
   }
 
+
   public User findById(Long userId) {
       return userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
   }
@@ -211,4 +235,5 @@ public class UserService {
   public User findByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
   }
+
 }
