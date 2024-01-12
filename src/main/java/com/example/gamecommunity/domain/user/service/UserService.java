@@ -8,6 +8,7 @@ import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED
 import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_AUTHENTICATION_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.FAILED_EMAIL_SEND_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.INVALID_TOKEN_EXCEPTION;
+import static com.example.gamecommunity.global.exception.common.ErrorCode.LOGIN_REQUIRED_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION;
 import static com.example.gamecommunity.global.exception.common.ErrorCode.NOT_FOUND_USER_EXCEPTION;
 
@@ -133,7 +134,7 @@ public class UserService {
     // 레디스에서 리프레시 토큰 ttl 적용하기 위해
     Long refreshExpiration = jwtUtil.getExpiration(tokenDto.refreshToken());
     // 리프레시 토큰 ttl
-    redisUtil.setDataExpire(email,tokenDto.refreshToken(),refreshExpiration);
+    redisUtil.setDataExpire(email, tokenDto.refreshToken(), refreshExpiration);
 
     return tokenDto;
   }
@@ -161,13 +162,36 @@ public class UserService {
     String accessToken = jwtUtil.getJWtAccessHeader(request);
 
     if (!jwtUtil.validateToken(accessToken)) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST,INVALID_TOKEN_EXCEPTION);
+      throw new BusinessException(HttpStatus.BAD_REQUEST, INVALID_TOKEN_EXCEPTION);
     }
     Claims claims = jwtUtil.getUserInfoFromToken(accessToken);
     String email = claims.getSubject();
 
     redisUtil.deleteData(email);
   }
+
+  public TokenDto reissue(HttpServletRequest request) {
+    String RefreshToken = jwtUtil.getJWtRefreshHeader(request);
+    UserRoleEnum role = jwtUtil.getUserRole(RefreshToken);
+
+    if (!jwtUtil.validateToken(RefreshToken)) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, INVALID_TOKEN_EXCEPTION);
+    }
+
+    Claims claims = jwtUtil.getUserInfoFromToken(RefreshToken);
+    String email = claims.getSubject();
+
+    // 레디스에 해당 key:email,value:리프레시토큰 있나 확인
+    if (redisUtil.getData(email) == null) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, LOGIN_REQUIRED_EXCEPTION);
+    }
+    // 리프레시도 새로 갱신 안하고 그대로 반환 (로그 아웃하거나 유효기간 지나면 다시 로그인 하기)
+    TokenDto tokenDto = TokenDto.of(jwtUtil.createAccessToken(email, role),
+        request.getHeader("Refresh"));
+
+    return tokenDto;
+  }
+
 
   public void idEmailUnique(String email) {
     if (userRepository.findByEmail(email).isPresent()) {
@@ -202,5 +226,6 @@ public class UserService {
     SecurityContext context = SecurityContextHolder.getContext();
     context.setAuthentication(authentication);
   }
+
 
 }

@@ -92,4 +92,13 @@ public class UserController {
     return ResponseEntity.ok(ApiResponse.ok("로그아웃 성공.", null));
   }
 
+  @PostMapping("/reissue")
+  public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) {
+
+    TokenDto tokenDto = userService.reissue(request);
+
+    jwtUtil.setTokenResponse(tokenDto, response);
+
+    return ResponseEntity.ok(ApiResponse.ok("토큰 재발급 성공.", null));
+  }
 }
