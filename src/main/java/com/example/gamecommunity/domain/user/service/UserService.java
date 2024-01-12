@@ -180,7 +180,7 @@ public class UserService {
     if (redisUtil.getData(email) == null) {
       throw new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.LOGIN_REQUIRED_EXCEPTION);
     }
-    // 리프레시도 새로 갱신 안하고 그대로 반환 (로그 아웃하거나 유효기간 지나면 다시 로그인 하기)
+    // 리프레시토큰은 새로 갱신 안하고 그대로 반환 (로그아웃 말고는 24시간후 무조건 다시 로그인 하기)
     TokenDto tokenDto = TokenDto.of(jwtUtil.createAccessToken(email, role),
         request.getHeader("Refresh"));
 
