@@ -28,6 +28,7 @@ public interface UserTest {
       .blockDate(TEST_BLOCK_DATE)
       .ranking(TEST_RANKING)
       .profileUrl(TEST_PROFILE_URL)
+      .role(UserRoleEnum.USER)
       .build();
 
   User TEST_ANOTHER_USER = User.builder()
@@ -39,6 +40,7 @@ public interface UserTest {
       .blockDate(TEST_BLOCK_DATE)
       .ranking(TEST_RANKING)
       .profileUrl(ANOTHER_PREFIX +TEST_PROFILE_URL)
+      .role(UserRoleEnum.USER)
       .build();
 
   User TEST_ADMIN_USER = User.builder()
