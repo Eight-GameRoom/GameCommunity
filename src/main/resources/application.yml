@@ -62,3 +62,10 @@ cloud:
 jwt:
   secret:
     key: ${jwt.secret.key}
+
+admin:
+  token: ${admin.token}
+
+kakao:
+  rest_api_key: ${kakao.rest_api_key}
+  redirect_uri: ${kakao.redirect_uri}
