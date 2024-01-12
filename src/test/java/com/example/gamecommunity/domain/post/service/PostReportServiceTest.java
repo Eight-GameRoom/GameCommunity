@@ -28,7 +28,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ExtendWith(MockitoExtension.class)
 class PostReportServiceTest implements PostTest {
 
-
   @InjectMocks
   private PostReportService postReportService;
   @Mock
@@ -59,7 +58,7 @@ class PostReportServiceTest implements PostTest {
     // then
     verify(postReportRepository, times(1)).save(any(PostReport.class));
     verify(postReportRepository, times(1)).existsByUserAndPost(any(User.class), any(Post.class));
-    assertEquals(TEST_REPORT + 1, post.getPostLike());
+    assertEquals(TEST_REPORT + 1, post.getReport());
   }
 
   @Test

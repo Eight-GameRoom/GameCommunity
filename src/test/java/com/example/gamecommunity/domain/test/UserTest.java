@@ -1,6 +1,8 @@
 package com.example.gamecommunity.domain.test;
 
 import com.example.gamecommunity.domain.user.entity.User;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import org.joda.time.DateTime;
 
 public interface UserTest {
@@ -11,7 +13,7 @@ public interface UserTest {
   String TEST_PASSWORD = "password";
   String TEST_NICKNAME = "nickname";
   String TEST_INTRODUCTION = "intro";
-  DateTime TEST_BLOCK_DATE = DateTime.now();
+  Instant TEST_BLOCK_DATE = Instant.now();
   int TEST_RANKING = 0;
   String TEST_PROFILE_URL = "url";
 
