@@ -9,12 +9,14 @@ import com.example.gamecommunity.domain.user.service.UserService;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import com.example.gamecommunity.global.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +52,7 @@ public class UserController {
   // 이메일 인증 확인
   @PostMapping("/signup/emailauthcheck")
   public ResponseEntity<ApiResponse> emailAuthCheck(@Valid @RequestBody EmailDto.CheckRequest requestDto){
+
     userService.emailAuthCheck(requestDto);
 
     return ResponseEntity.ok(ApiResponse.ok("이메일 인증 성공.", null));
@@ -81,5 +84,12 @@ public class UserController {
     return ResponseEntity.ok(ApiResponse.ok("비밀번호 변경 성공.", null));
   }
 
+  @DeleteMapping("/logout")
+  public ResponseEntity<ApiResponse> logout(HttpServletRequest request){
+
+    userService.logout(request);
+
+    return ResponseEntity.ok(ApiResponse.ok("로그아웃 성공.", null));
+  }
 
 }
