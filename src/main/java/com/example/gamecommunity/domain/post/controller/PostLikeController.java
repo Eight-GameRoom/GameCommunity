@@ -2,6 +2,7 @@ package com.example.gamecommunity.domain.post.controller;
 
 import com.example.gamecommunity.domain.post.service.PostLikeService;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.config.SecurityConfig.AuthenticationHelper;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class PostLikeController {
 
   private final PostLikeService postLikeService;
 
+  private final AuthenticationHelper authenticationHelper;
+
   // 좋아요 싫어요 하기
   @PostMapping
   public ResponseEntity<?> addLike(
@@ -28,7 +31,7 @@ public class PostLikeController {
       @RequestParam Boolean isLike,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    User loginUser = userDetails.getUser();
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
     postLikeService.addLike(postId, isLike,loginUser);
     String message;
