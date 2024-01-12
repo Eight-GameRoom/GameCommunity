@@ -1,9 +1,8 @@
 package com.example.gamecommunity.domain.user.entity;
 
-
-
 import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import com.example.gamecommunity.domain.post.entity.Post;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,7 +23,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.joda.time.DateTime;
 import reactor.core.scheduler.Scheduler.Worker;
-
 
 @Getter
 @Setter

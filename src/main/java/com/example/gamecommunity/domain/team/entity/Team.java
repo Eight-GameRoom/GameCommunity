@@ -1,7 +1,6 @@
 package com.example.gamecommunity.domain.team.entity;
 
 import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.team.GameEnum;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import com.example.gamecommunity.global.auditing.TimeStamped;
