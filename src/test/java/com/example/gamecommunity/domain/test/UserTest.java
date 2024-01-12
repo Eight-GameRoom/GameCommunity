@@ -1,15 +1,16 @@
 package com.example.gamecommunity.domain.test;
 
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import org.joda.time.DateTime;
 
 public interface UserTest {
   String ANOTHER_PREFIX = "another-";
+  String ADMIN_PREFIX = "admin-";
   Long TEST_USER_ID = 1L;
   Long TEST_ANOTHER_USER_ID = 2L;
+  Long TEST_ADMIN_USER_ID = 3L;
   String TEST_EMAIL = "user@email.com";
   String TEST_PASSWORD = "password";
   String TEST_NICKNAME = "nickname";
@@ -38,6 +39,17 @@ public interface UserTest {
       .blockDate(TEST_BLOCK_DATE)
       .ranking(TEST_RANKING)
       .profileUrl(ANOTHER_PREFIX +TEST_PROFILE_URL)
+      .build();
+
+  User TEST_ADMIN_USER = User.builder()
+      .id(TEST_ADMIN_USER_ID)
+      .email(ADMIN_PREFIX + TEST_EMAIL)
+      .password(ADMIN_PREFIX +TEST_PASSWORD)
+      .nickname(ADMIN_PREFIX +TEST_NICKNAME)
+      .introduction(ADMIN_PREFIX +TEST_INTRODUCTION)
+      .ranking(TEST_RANKING)
+      .profileUrl(ADMIN_PREFIX +TEST_PROFILE_URL)
+      .role(UserRoleEnum.ADMIN)
       .build();
 
   UserDetailsImpl TEST_USER_DETAILS = new UserDetailsImpl(TEST_USER);
