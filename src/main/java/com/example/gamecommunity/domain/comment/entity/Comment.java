@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "comments")
 public class Comment extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
