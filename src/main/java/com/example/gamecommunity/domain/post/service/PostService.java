@@ -8,8 +8,10 @@ import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.config.SecurityConfig.AuthenticationHelper;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,13 +31,14 @@ public class PostService {
 
   private final PostImageUploadService postImageUploadService;
 
+  private final AuthenticationHelper authenticationHelper;
+
   @Transactional
   public void createPost(
-      PostRequestDto requestDto,
-      GameType gameType,
-      GameName gameName,
-      BoardName boardName,
-      MultipartFile file, User loginUser) throws IOException {
+      PostRequestDto requestDto, GameType gameType, GameName gameName, BoardName boardName,
+      MultipartFile file, UserDetailsImpl userDetails) throws IOException {
+
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
     String imageUrl = null;
 
@@ -74,13 +77,15 @@ public class PostService {
 
   @Transactional
   public void updatePost(
-      Long postId, PostRequestDto requestDto, MultipartFile file, User loginuser)
+      Long postId, PostRequestDto requestDto, MultipartFile file, UserDetailsImpl userDetails)
       throws IOException {
+
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
     Post post = getFindPost(postId);
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
-    if (!loginuser.getNickname().equals(post.getPostAuthor())) {
+    if (!loginUser.getNickname().equals(post.getPostAuthor())) {
       throw new BusinessException(HttpStatus.BAD_REQUEST,
           ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
@@ -96,12 +101,14 @@ public class PostService {
   }
 
   @Transactional
-  public void deletePost(Long postId, User loginuser) {
+  public void deletePost(Long postId, UserDetailsImpl userDetails) {
+
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
     Post post = getFindPost(postId);
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
-    if (!loginuser.getNickname().equals(post.getPostAuthor())) {
+    if (!loginUser.getNickname().equals(post.getPostAuthor())) {
       throw new BusinessException(HttpStatus.BAD_REQUEST,
           ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }

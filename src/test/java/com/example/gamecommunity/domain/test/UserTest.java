@@ -1,6 +1,7 @@
 package com.example.gamecommunity.domain.test;
 
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import org.joda.time.DateTime;
@@ -38,4 +39,6 @@ public interface UserTest {
       .ranking(TEST_RANKING)
       .profileUrl(ANOTHER_PREFIX +TEST_PROFILE_URL)
       .build();
+
+  UserDetailsImpl TEST_USER_DETAILS = new UserDetailsImpl(TEST_USER);
 }

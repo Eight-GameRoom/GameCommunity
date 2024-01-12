@@ -5,8 +5,9 @@ import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
 import com.example.gamecommunity.domain.post.entity.Post;
 import java.time.LocalDateTime;
+import lombok.Builder;
 
-
+@Builder
 public record PostResponseDto(
 
     Long postId,
