@@ -18,6 +18,7 @@ import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,7 @@ public class AdminService {
         () -> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
     );
 
-    DateTime dt = DateTime.parse(blockDate.toString());
-    user.setBlockDate(dt);
+    user.setBlockDate(blockDate.toInstant(ZoneOffset.UTC));
   }
 
   public List<PostResponseDto> getReportedPosts() {

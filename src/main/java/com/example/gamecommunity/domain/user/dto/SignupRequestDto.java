@@ -1,6 +1,7 @@
 package com.example.gamecommunity.domain.user.dto;
 
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -21,17 +22,18 @@ public record SignupRequestDto(
       @NotBlank(message = "비밀번호 확인 공백일 수 없습니다.")
       String checkPassword,
 
-      String imageName,
+      String introduction,
 
-      String introduction){
+      boolean Admin,
+      String AdminToken){
 
-    public User toEntity(String passwordEncoder,String imageName){
+    public User toEntity(String passwordEncoder, UserRoleEnum role){
       return User.builder()
           .email(email)
           .nickname(nickname)
           .password(passwordEncoder)
           .introduction(introduction)
-          .profileUrl(imageName)
+          .role(role)
           .build();
     }
 

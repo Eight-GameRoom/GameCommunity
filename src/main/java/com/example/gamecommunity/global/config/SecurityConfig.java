@@ -59,7 +59,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/signup").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/teams").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()
                         .anyRequest().authenticated()
         );
