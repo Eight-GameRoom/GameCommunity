@@ -9,6 +9,7 @@ import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
@@ -40,6 +41,10 @@ public class AdminService {
   }
 
   public void deleteUser(long userId) {
+    userRepository.findById(userId).orElseThrow(
+        ()-> new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
+    );
+
     userRepository.deleteById(userId);
   }
 
@@ -74,10 +79,10 @@ public class AdminService {
       PostRequestDto requestDto,
       GameType gameType,
       GameName gameName,
-      UserDetailsImpl userDetails
+      User user
   ) {
     Post post = new Post(requestDto, gameType, gameName, BoardName.NOTICE_BOARD, "",
-        userDetails.getUser());
+        user);
     postRepository.save(post);
   }
 }

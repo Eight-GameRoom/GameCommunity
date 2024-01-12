@@ -73,7 +73,7 @@ public class AdminController {
       @RequestParam(required = false) GameType gameType,
       @RequestParam(required = false) GameName gameName,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    adminService.writeNotice(requestDto, gameType, gameName, userDetails);
+    adminService.writeNotice(requestDto, gameType, gameName, userDetails.getUser());
     return ResponseEntity.ok(ApiResponse.ok("공지사항 작성 성공", null));
   }
 }
