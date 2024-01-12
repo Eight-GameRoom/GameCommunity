@@ -1,9 +1,7 @@
 package com.example.gamecommunity.domain.team.dto;
 
 import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.team.GameEnum;
 import com.example.gamecommunity.domain.team.entity.Team;
-import lombok.Getter;
 
 
 public record TeamRequestDto(

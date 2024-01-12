@@ -1,7 +1,6 @@
 package com.example.gamecommunity.domain.team.service;
 
 import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.team.GameEnum;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
 import com.example.gamecommunity.domain.team.entity.Team;
@@ -12,12 +11,10 @@ import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
-import com.example.gamecommunity.global.exception.common.GlobalExceptionHandler;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

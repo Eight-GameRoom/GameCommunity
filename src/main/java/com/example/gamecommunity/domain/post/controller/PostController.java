@@ -6,12 +6,18 @@ import com.example.gamecommunity.domain.enums.gameType.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
+import com.example.gamecommunity.domain.user.controller.UserController;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.config.SecurityConfig.AuthenticationHelper;
+import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
+import java.net.BindException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +39,8 @@ public class PostController {
 
   private final PostService postService;
 
+  private final AuthenticationHelper authenticationHelper;
+
   // 게시글 작성
   @PostMapping
   public ResponseEntity<?> createPost(
@@ -43,7 +51,7 @@ public class PostController {
       @RequestParam BoardName boardName,
       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    User loginUser = userDetails.getUser();
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
     postService.createPost(requestDto, gameType, gameName, boardName, file, loginUser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", null));
@@ -82,9 +90,9 @@ public class PostController {
       @RequestPart(value = "file", required = false) MultipartFile file,
       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    User loginuser = userDetails.getUser();
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
-    postService.updatePost(postId, requestDto, file, loginuser);
+    postService.updatePost(postId, requestDto, file, loginUser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 수정 성공", null));
   }
 
@@ -94,9 +102,9 @@ public class PostController {
       @PathVariable Long postId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    User loginuser = userDetails.getUser();
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
 
-    postService.deletePost(postId, loginuser);
+    postService.deletePost(postId, loginUser);
     return ResponseEntity.ok(ApiResponse.ok("게시글 삭제 성공", null));
   }
 
