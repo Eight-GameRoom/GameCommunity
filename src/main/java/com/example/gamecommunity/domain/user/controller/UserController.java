@@ -84,6 +84,7 @@ public class UserController {
     return ResponseEntity.ok(ApiResponse.ok("비밀번호 변경 성공.", null));
   }
 
+  // 로그아웃
   @DeleteMapping("/logout")
   public ResponseEntity<ApiResponse> logout(HttpServletRequest request){
 
@@ -92,6 +93,7 @@ public class UserController {
     return ResponseEntity.ok(ApiResponse.ok("로그아웃 성공.", null));
   }
 
+  // 토큰 재발급
   @PostMapping("/reissue")
   public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) {
 
