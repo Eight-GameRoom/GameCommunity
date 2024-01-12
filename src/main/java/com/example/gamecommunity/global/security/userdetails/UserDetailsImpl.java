@@ -1,8 +1,8 @@
 package com.example.gamecommunity.global.security.userdetails;
 
 
-
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +33,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String authority = "USER";
+        UserRoleEnum role = user.getRole();
+        String authority = role.getAuthority();
+
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();

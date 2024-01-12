@@ -13,6 +13,7 @@ public enum ErrorCode {
   DUPLICATED_REPORT_EXCEPTION("이미 신고한 내역이 있습니다."),
 
   // user
+  FAILED_ADMIN_PASSWORD_EXCEPTION("관리자 암호 인증 실패해서 가입이 불가능합니다."),
   ALREADY_EXIST_USER_EMAIL_EXCEPTION("이미 존재하는 이메일 입니다."),
   ALREADY_EXIST_USER_NICKNAME_EXCEPTION("이미 존재하는 닉네임 입니다."),
   NOT_EQUALS_CONFIRM_PASSWORD_EXCEPTION("비밀번호 확인이 일치하지 않습니다."),
@@ -24,7 +25,15 @@ public enum ErrorCode {
   AUTHENTICATION_MISMATCH_EXCEPTION("수정 및 삭제 권한이 없습니다."),
 
   // guestbook
-  NOT_FOUND_GUESTBOOK_EXCEPTION("해당 방명록을 찾을 수 없습니다.");
+  NOT_FOUND_GUESTBOOK_EXCEPTION("해당 방명록을 찾을 수 없습니다."),
+  INVALID_TOKEN_EXCEPTION("유효하지 않은 토큰 입니다."),
+
+  // team
+  NOT_FOUND_TEAM_EXCEPTION("해당 팀이 존재하지 않습니다."),
+  NOT_EQUALS_TEAM_ADMIN("팀의 관리자가 아닙니다."),
+  NOT_FOUND_TEAM_USER("팀에 유저가 속해있지 않습니다.");
+
+
 
   private final String message;
 
