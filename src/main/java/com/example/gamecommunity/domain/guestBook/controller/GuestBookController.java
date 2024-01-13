@@ -3,12 +3,13 @@ package com.example.gamecommunity.domain.guestBook.controller;
 import com.example.gamecommunity.domain.guestBook.dto.CreateGuestBookDto;
 import com.example.gamecommunity.domain.guestBook.dto.ModifyGuestBookDto;
 import com.example.gamecommunity.domain.guestBook.service.GuestBookService;
+import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,36 +27,36 @@ public class GuestBookController {
 
   // 방명록 댓글 작성
   @PostMapping("/{toUserId}/guestbooks")
-  public ResponseEntity<CreateGuestBookDto.Response> createComment(
+  public ResponseEntity<ApiResponse> createComment(
           @PathVariable Long toUserId,
           @RequestBody @Valid CreateGuestBookDto.Request createGuestBookDto,
           @AuthenticationPrincipal UserDetailsImpl userDetails
   ) {
 
-    CreateGuestBookDto.Response responseDto = guestBookService.createComment(toUserId, createGuestBookDto, userDetails);
+    guestBookService.createComment(toUserId, createGuestBookDto, userDetails);
 
-    return ResponseEntity.ok(responseDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("방명록 작성 성공", null));
   }
 
   // 방명록 댓글 수정
   @PatchMapping("/{toUserId}/guestbooks/{guestbookId}")
-  public ResponseEntity<String> modifyComment(
+  public ResponseEntity<ApiResponse> modifyComment(
           @PathVariable Long guestbookId,
           @RequestBody @Valid ModifyGuestBookDto modifyGuestBookDto
   ) {
     guestBookService.modifyComment(guestbookId, modifyGuestBookDto.content());
 
-    return ResponseEntity.ok("방명록 수정 완료");
+    return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("방명록 수정 성공", null));
   }
 
   // 방명록 댓글 삭제
   @DeleteMapping("/{toUserId}/guestbooks/{guestbookId}")
-  public ResponseEntity<String> deleteComment(
+  public ResponseEntity<ApiResponse> deleteComment(
           @PathVariable Long guestbookId
   ) {
     guestBookService.deleteComment(guestbookId);
 
-    return ResponseEntity.ok("방명록 삭제 성공");
+    return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("방명록 삭제 성공", null));
   }
 
 

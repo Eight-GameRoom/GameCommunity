@@ -4,8 +4,6 @@ import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
 import com.example.gamecommunity.domain.user.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
-import lombok.Builder;
 
 public class CreateGuestBookDto {
 
@@ -21,7 +19,7 @@ public class CreateGuestBookDto {
               .build();
     }
   }
-
+/*
   @Builder
   public record Response(Long guestbookId,
                          String content,
@@ -37,7 +35,7 @@ public class CreateGuestBookDto {
               .build();
     }
 
-  }
+  }*/
 
 
 }
