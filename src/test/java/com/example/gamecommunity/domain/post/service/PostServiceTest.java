@@ -108,7 +108,7 @@ class PostServiceTest implements PostTest {
       postService.getPost(postId);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
     assertEquals(ErrorCode.NOT_FOUND_POST_EXCEPTION.getMessage(), ex.getMessage());
 
     verify(postRepository, times(1)).findById(postId);
@@ -195,7 +195,7 @@ class PostServiceTest implements PostTest {
       postService.updatePost(postId, requestDto, file, userDetails);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
     assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
 
@@ -239,7 +239,7 @@ class PostServiceTest implements PostTest {
       postService.deletePost(postId, userDetails);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
     assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
 

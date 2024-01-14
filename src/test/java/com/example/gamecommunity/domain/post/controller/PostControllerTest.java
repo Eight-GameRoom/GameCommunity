@@ -1,34 +1,32 @@
 package com.example.gamecommunity.domain.post.controller;
 
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-import com.example.gamecommunity.domain.enums.boardName.BoardName;
-import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.enums.board.BoardName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
+import com.example.gamecommunity.domain.enums.game.type.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
-import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.post.service.PostService;
 import com.example.gamecommunity.domain.test.ControllerTest;
 import com.example.gamecommunity.domain.test.PostTest;
-import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
