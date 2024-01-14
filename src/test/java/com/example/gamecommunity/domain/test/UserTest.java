@@ -2,9 +2,8 @@ package com.example.gamecommunity.domain.test;
 
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import org.joda.time.DateTime;
 
 public interface UserTest {
   String ANOTHER_PREFIX = "another-";
@@ -29,6 +28,7 @@ public interface UserTest {
       .blockDate(TEST_BLOCK_DATE)
       .ranking(TEST_RANKING)
       .profileUrl(TEST_PROFILE_URL)
+      .role(UserRoleEnum.USER)
       .build();
 
   User TEST_ANOTHER_USER = User.builder()
@@ -40,6 +40,7 @@ public interface UserTest {
       .blockDate(TEST_BLOCK_DATE)
       .ranking(TEST_RANKING)
       .profileUrl(ANOTHER_PREFIX +TEST_PROFILE_URL)
+      .role(UserRoleEnum.USER)
       .build();
 
   User TEST_ADMIN_USER = User.builder()
@@ -52,4 +53,6 @@ public interface UserTest {
       .profileUrl(ADMIN_PREFIX +TEST_PROFILE_URL)
       .role(UserRoleEnum.ADMIN)
       .build();
+
+  UserDetailsImpl TEST_USER_DETAILS = new UserDetailsImpl(TEST_USER);
 }

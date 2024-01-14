@@ -24,7 +24,7 @@ public enum ErrorCode {
   EMAIL_VERIFICATION_NEEDED("이메일 인증이 필요 합니다"),
   AUTHENTICATION_EXCEPTION("로그인하고 이용해주세요."),
   INVALID_TOKEN_EXCEPTION("유효하지 않은 토큰 입니다."),
-  AUTHENTICATION_MISMATCH_EXCEPTION("권한이 일치하지 않습니다."),
+  AUTHENTICATION_MISMATCH_EXCEPTION("권한이 없습니다."),
   LOGIN_REQUIRED_EXCEPTION("리프레시 토큰 문제 있으니 다시 로그인 해주세요."),
 
   // guestbook
@@ -33,7 +33,10 @@ public enum ErrorCode {
   // team
   NOT_FOUND_TEAM_EXCEPTION("해당 팀이 존재하지 않습니다."),
   NOT_EQUALS_TEAM_ADMIN("팀의 관리자가 아닙니다."),
-  NOT_FOUND_TEAM_USER("팀에 유저가 속해있지 않습니다.");
+  NOT_FOUND_TEAM_USER("팀에 유저가 속해있지 않습니다."),
+
+  // comment
+  NOT_FOUND_COMMENT("해당 댓글을 찾을 수 없습니다.");
 
 
 

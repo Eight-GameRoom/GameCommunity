@@ -2,14 +2,13 @@ package com.example.gamecommunity.domain.admin.service;
 
 import com.example.gamecommunity.domain.admin.dto.AdminUserResponseDto;
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
-import com.example.gamecommunity.domain.enums.boardName.BoardName;
-import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.enums.board.BoardName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
+import com.example.gamecommunity.domain.enums.game.type.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
-import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.entity.UserRoleEnum;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;

@@ -61,8 +61,8 @@ public class UserService {
     confirmPassword(requestDto.password(), requestDto.checkPassword());
 
     UserRoleEnum role = UserRoleEnum.USER;
-    if (requestDto.Admin()) {
-      if (!ADMIN_TOKEN.equals(requestDto.AdminToken())) {
+    if (requestDto.isAdmin()) {
+      if (!ADMIN_TOKEN.equals(requestDto.adminToken())) {
         throw new BusinessException(HttpStatus.BAD_REQUEST,
             ErrorCode.FAILED_ADMIN_PASSWORD_EXCEPTION);
       }

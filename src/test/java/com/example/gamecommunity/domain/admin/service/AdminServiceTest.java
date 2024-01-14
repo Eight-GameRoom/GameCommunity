@@ -15,9 +15,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.example.gamecommunity.domain.admin.dto.UserBlockRequestDto;
-import com.example.gamecommunity.domain.enums.boardName.BoardName;
-import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.enums.board.BoardName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
+import com.example.gamecommunity.domain.enums.game.type.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
@@ -36,7 +36,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class AdminServiceTest {

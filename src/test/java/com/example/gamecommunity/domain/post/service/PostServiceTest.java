@@ -9,16 +9,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.example.gamecommunity.domain.test.PostTest;
-import com.example.gamecommunity.domain.enums.boardName.BoardName;
-import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.enums.board.BoardName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
+import com.example.gamecommunity.domain.enums.game.type.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.config.SecurityConfig.AuthenticationHelper;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -49,20 +51,26 @@ class PostServiceTest implements PostTest {
   private PostRepository postRepository;
   @Mock
   private PostImageUploadService postImageUploadService;
+  @Mock
+  private AuthenticationHelper authenticationHelper;
 
   @Test
   @DisplayName("게시글 작성 - 성공")
   void createPostTestSuccess() throws IOException {
 
     // given
-    PostRequestDto requestDto = new PostRequestDto(TEST_POST_TITLE, TEST_POST_CONTENT);
+    PostRequestDto requestDto = TEST_REQUEST_DTO;
     MultipartFile file = mock(MultipartFile.class);
-    User loginUser = TEST_USER;
+    UserDetailsImpl userDetails = TEST_USER_DETAILS;
+    User loginUser = userDetails.getUser();
+
+    given(authenticationHelper.checkAuthentication(userDetails)).willReturn(loginUser);
 
     given(postImageUploadService.uploadFile(file)).willReturn(TEST_POST_IMAGE_URL);
 
     // when
-    postService.createPost(requestDto, TEST_GAME_TYPE, TEST_GAME_NAME, TEST_BOARD_NAME, file, loginUser);
+    postService.createPost(requestDto, TEST_GAME_TYPE, TEST_GAME_NAME, TEST_BOARD_NAME,
+        file, TEST_USER_DETAILS);
 
     // Then
     verify(postImageUploadService, times(1)).uploadFile(file);
@@ -100,7 +108,7 @@ class PostServiceTest implements PostTest {
       postService.getPost(postId);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
     assertEquals(ErrorCode.NOT_FOUND_POST_EXCEPTION.getMessage(), ex.getMessage());
 
     verify(postRepository, times(1)).findById(postId);
@@ -144,8 +152,11 @@ class PostServiceTest implements PostTest {
     // given
     Long postId = TEST_POST_ID;
     Post post = TEST_POST;
-    User loginUser = TEST_USER;
     MultipartFile file = mock(MultipartFile.class);
+    UserDetailsImpl userDetails = TEST_USER_DETAILS;
+    User loginUser = userDetails.getUser();
+
+    given(authenticationHelper.checkAuthentication(userDetails)).willReturn(loginUser);
 
     PostRequestDto requestDto = new PostRequestDto(
         TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
@@ -153,7 +164,7 @@ class PostServiceTest implements PostTest {
     given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
     // when
-    postService.updatePost(postId, requestDto, file, loginUser);
+    postService.updatePost(postId, requestDto, file, userDetails);
 
     // then
     assertEquals(TEST_ANOTHER_POST.getPostTitle(), post.getPostTitle());
@@ -165,10 +176,14 @@ class PostServiceTest implements PostTest {
   void updatePostTestFailureNotAuth() throws IOException {
 
     // given
-    Long postId = TEST_POST_ID;
-    Post post = TEST_POST;
-    User loginUser = TEST_ANOTHER_USER;
+    Long postId = TEST_ANOTHER_POST_ID;
+    Post post = TEST_ANOTHER_POST;
     MultipartFile file = mock(MultipartFile.class);
+
+    UserDetailsImpl userDetails = TEST_USER_DETAILS;
+    User loginUser = userDetails.getUser();
+
+    given(authenticationHelper.checkAuthentication(userDetails)).willReturn(loginUser);
 
     PostRequestDto requestDto = new PostRequestDto(
         TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
@@ -177,10 +192,10 @@ class PostServiceTest implements PostTest {
 
     // when, then
     BusinessException ex = assertThrows(BusinessException.class, () -> {
-      postService.updatePost(postId, requestDto, file, loginUser);
+      postService.updatePost(postId, requestDto, file, userDetails);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
     assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
 
@@ -191,12 +206,15 @@ class PostServiceTest implements PostTest {
     // given
     Long postId = TEST_POST_ID;
     Post post = TEST_POST;
-    User loginUser = TEST_USER;
+    UserDetailsImpl userDetails = TEST_USER_DETAILS;
+    User loginUser = userDetails.getUser();
+
+    given(authenticationHelper.checkAuthentication(userDetails)).willReturn(loginUser);
 
     given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
     // when
-    postService.deletePost(postId, loginUser);
+    postService.deletePost(postId, userDetails);
 
     // then
     verify(postRepository, times(1)).delete(post);
@@ -207,18 +225,21 @@ class PostServiceTest implements PostTest {
   void deletePostTestFailureNotAuth() {
 
     // given
-    Long postId = TEST_POST_ID;
-    Post post = TEST_POST;
-    User loginUser = TEST_ANOTHER_USER;
+    Long postId = TEST_ANOTHER_POST_ID;
+    Post post = TEST_ANOTHER_POST;
+    UserDetailsImpl userDetails = TEST_USER_DETAILS;
+    User loginUser = userDetails.getUser();
+
+    given(authenticationHelper.checkAuthentication(userDetails)).willReturn(loginUser);
 
     given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
     // when, then
     BusinessException ex = assertThrows(BusinessException.class, () -> {
-      postService.deletePost(postId, loginUser);
+      postService.deletePost(postId, userDetails);
     });
 
-    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
     assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
 

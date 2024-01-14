@@ -1,12 +1,9 @@
-package com.example.gamecommunity.domain.teamUser.entity;
+package com.example.gamecommunity.domain.team.user.entity;
 
 import com.example.gamecommunity.domain.team.entity.Team;
 import com.example.gamecommunity.domain.user.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;

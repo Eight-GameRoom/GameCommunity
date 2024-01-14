@@ -1,23 +1,18 @@
 package com.example.gamecommunity.domain.post.controller;
 
-import com.example.gamecommunity.domain.enums.boardName.BoardName;
-import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.enums.gameType.GameType;
+import com.example.gamecommunity.domain.enums.board.BoardName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
+import com.example.gamecommunity.domain.enums.game.type.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
-import com.example.gamecommunity.domain.user.controller.UserController;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.config.SecurityConfig.AuthenticationHelper;
-import com.example.gamecommunity.global.exception.common.BusinessException;
-import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
-import java.net.BindException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -39,8 +33,6 @@ public class PostController {
 
   private final PostService postService;
 
-  private final AuthenticationHelper authenticationHelper;
-
   // 게시글 작성
   @PostMapping
   public ResponseEntity<?> createPost(
@@ -51,9 +43,7 @@ public class PostController {
       @RequestParam BoardName boardName,
       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    postService.createPost(requestDto, gameType, gameName, boardName, file, loginUser);
+    postService.createPost(requestDto, gameType, gameName, boardName, file, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", null));
   }
 
@@ -90,9 +80,7 @@ public class PostController {
       @RequestPart(value = "file", required = false) MultipartFile file,
       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    postService.updatePost(postId, requestDto, file, loginUser);
+    postService.updatePost(postId, requestDto, file, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("게시글 수정 성공", null));
   }
 
@@ -102,9 +90,7 @@ public class PostController {
       @PathVariable Long postId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    postService.deletePost(postId, loginUser);
+    postService.deletePost(postId, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("게시글 삭제 성공", null));
   }
 

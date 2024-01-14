@@ -10,9 +10,9 @@ spring:
       on-profile: local
 
   datasource:
-    url: jdbc:mysql://localhost:${port}/${db_name}
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://localhost:3306/game
+    username: root
+    password: akdlapffhel
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -32,8 +32,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${gmail}
-    password: ${mail_password}
+    username: a
+    password: a
     properties:
       mail:
         smtp:
@@ -49,8 +49,8 @@ spring:
 cloud:
   aws:
     credentials:
-      access-key: ${access-key}
-      secret-key: ${secret-key}
+      access-key: a
+      secret-key: a
     s3:
       bucket: game-post-image
     region:
@@ -61,11 +61,11 @@ cloud:
 
 jwt:
   secret:
-    key: ${jwt.secret.key}
+    key: and0LXNlY3JldC1rZXktZm9yLW5hdGVhbXN0b3JlLW5pY2UtdmFsdWUh
 
 admin:
-  token: ${admin.token}
+  token: a
 
 kakao:
-  rest_api_key: ${kakao.rest_api_key}
-  redirect_uri: ${kakao.redirect_uri}
+  rest_api_key: a
+  redirect_uri: a

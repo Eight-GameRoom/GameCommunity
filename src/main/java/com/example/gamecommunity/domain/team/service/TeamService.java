@@ -1,12 +1,12 @@
 package com.example.gamecommunity.domain.team.service;
 
-import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
 import com.example.gamecommunity.domain.team.entity.Team;
 import com.example.gamecommunity.domain.team.repository.TeamRepository;
-import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
-import com.example.gamecommunity.domain.teamUser.repository.TeamUserRepository;
+import com.example.gamecommunity.domain.team.user.entity.TeamUser;
+import com.example.gamecommunity.domain.team.user.repository.TeamUserRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.repository.UserRepository;
 import com.example.gamecommunity.global.exception.common.BusinessException;
