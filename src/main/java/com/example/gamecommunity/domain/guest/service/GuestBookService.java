@@ -5,9 +5,12 @@ import com.example.gamecommunity.domain.guest.entity.GuestBook;
 import com.example.gamecommunity.domain.guest.repository.GuestBookRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.service.UserService;
+import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.exception.guestbook.NotFoundGuestBookException;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +45,7 @@ public class GuestBookService {
             NotFoundGuestBookException::new);
 
     if (!guestBook.getFromUser().getId().equals(userDetails.getId())) {
-      throw new IllegalArgumentException("자신이 작성한 방명록 댓글만 수정 가능합니다.");
+      throw new BusinessException(HttpStatus.UNAUTHORIZED, ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
     guestBook.modifyComment(content);
@@ -56,7 +59,7 @@ public class GuestBookService {
             NotFoundGuestBookException::new);
 
     if (!guestBook.getFromUser().getId().equals(userDetails.getId())) {
-      throw new IllegalArgumentException("자신이 작성한 방명록 댓글만 삭제 가능합니다.");
+      throw new BusinessException(HttpStatus.UNAUTHORIZED, ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
     guestBookRepository.delete(guestBook);

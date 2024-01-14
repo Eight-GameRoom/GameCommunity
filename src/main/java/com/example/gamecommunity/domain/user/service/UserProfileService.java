@@ -2,8 +2,11 @@ package com.example.gamecommunity.domain.user.service;
 
 import com.example.gamecommunity.domain.user.dto.UserProfileDto;
 import com.example.gamecommunity.domain.user.entity.User;
+import com.example.gamecommunity.global.exception.common.BusinessException;
+import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +32,7 @@ public class UserProfileService {
 
     User user = userService.findById(userId);
     if (!userId.equals(userDetails.getId())) {
-      throw new IllegalArgumentException("자신의 프로필만 수정 가능합니다.");
+      throw new BusinessException(HttpStatus.UNAUTHORIZED, ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
     user.modifyProfile(introduction, profile_url);
   }
