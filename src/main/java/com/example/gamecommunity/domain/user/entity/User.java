@@ -78,4 +78,9 @@ public class User {
   public void addKakaoId(Long kakaoId){
     this.kakaoId = kakaoId;
   }
+
+  public void modifyProfile(String introduction, String profileUrl) {
+    this.introduction = introduction;
+    this.profileUrl = profileUrl;
+  }
 }

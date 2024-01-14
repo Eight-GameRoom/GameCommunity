@@ -16,6 +16,7 @@ public class UserProfileService {
 
   private final UserRepository userRepository;
   private final GuestBookRepository guestBookRepository;
+  private final UserService userService;
 
   @Transactional
   public Response getProfile(Long userId) {
@@ -26,6 +27,14 @@ public class UserProfileService {
             .profile_url(user.getProfileUrl())
             .guestBookList(guestBookRepository.findAllById(userId))
             .build();
+  }
+
+  @Transactional
+  public void modifyProfile(Long userId, String introduction, String profile_url) {
+
+    User user = userService.findById(userId);
+
+    user.modifyProfile(introduction, profile_url);
   }
 
 }
