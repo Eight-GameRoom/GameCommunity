@@ -86,7 +86,7 @@ public class PostService {
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
     if (!loginUser.getNickname().equals(post.getPostAuthor())) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST,
+      throw new BusinessException(HttpStatus.UNAUTHORIZED,
           ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
@@ -109,7 +109,7 @@ public class PostService {
 
     // 로그인한 유저와 게시글 작성자와 일치하는지 확인
     if (!loginUser.getNickname().equals(post.getPostAuthor())) {
-      throw new BusinessException(HttpStatus.BAD_REQUEST,
+      throw new BusinessException(HttpStatus.UNAUTHORIZED,
           ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
     }
 
