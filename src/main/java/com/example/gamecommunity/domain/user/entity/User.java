@@ -1,7 +1,8 @@
 package com.example.gamecommunity.domain.user.entity;
 
-import com.example.gamecommunity.domain.team.user.entity.TeamUser;
+import com.example.gamecommunity.domain.guest.entity.GuestBook;
 import com.example.gamecommunity.domain.post.entity.Post;
+import com.example.gamecommunity.domain.team.user.entity.TeamUser;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,10 +66,11 @@ public class User {
   @OneToMany(mappedBy = "user",cascade = CascadeType.ALL , orphanRemoval = true)
   private List<TeamUser> teamUsers;
 
-
   @OneToMany(mappedBy = "user")
   private List<Post> posts = new ArrayList<>();
 
+  @OneToMany(mappedBy = "toUser", cascade = CascadeType.REMOVE)
+  private List<GuestBook> guestBookList;
 
   public void updatePassword(String password) {
     this.password = password;
@@ -76,4 +78,11 @@ public class User {
   public void addKakaoId(Long kakaoId){
     this.kakaoId = kakaoId;
   }
+
+  public void modifyProfile(String introduction, String profileUrl) {
+    this.introduction = introduction;
+    this.profileUrl = profileUrl;
+  }
+
+
 }
