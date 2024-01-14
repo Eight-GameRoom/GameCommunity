@@ -1,9 +1,8 @@
-package com.example.gamecommunity.domain.guestBook.service;
+package com.example.gamecommunity.domain.guest.service;
 
-import com.example.gamecommunity.domain.guestBook.dto.CreateGuestBookDto;
-import com.example.gamecommunity.domain.guestBook.dto.CreateGuestBookDto.Response;
-import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
-import com.example.gamecommunity.domain.guestBook.repository.GuestBookRepository;
+import com.example.gamecommunity.domain.guest.dto.CreateGuestBookDto;
+import com.example.gamecommunity.domain.guest.entity.GuestBook;
+import com.example.gamecommunity.domain.guest.repository.GuestBookRepository;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.service.UserService;
 import com.example.gamecommunity.global.exception.guestbook.NotFoundGuestBookException;
@@ -21,7 +20,7 @@ public class GuestBookService {
   private final GuestBookRepository guestBookRepository;
 
 
-  public Response createComment(
+  public void createComment(
           Long toUserId,
           CreateGuestBookDto.Request createGuestBookDto,
           UserDetailsImpl userDetails
@@ -32,9 +31,8 @@ public class GuestBookService {
 
     GuestBook guestBook = createGuestBookDto.toEntity(createGuestBookDto.content(), toUser, fromUser);
 
-    GuestBook savedGuestBook = guestBookRepository.save(guestBook);
+    guestBookRepository.save(guestBook);
 
-    return CreateGuestBookDto.Response.from(savedGuestBook);
   }
 
   @Transactional

@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.teamUser.entity;
+package com.example.gamecommunity.domain.team.user.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

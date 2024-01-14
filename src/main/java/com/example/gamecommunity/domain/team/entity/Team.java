@@ -1,8 +1,8 @@
 package com.example.gamecommunity.domain.team.entity;
 
-import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
-import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
+import com.example.gamecommunity.domain.team.user.entity.TeamUser;
 import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
