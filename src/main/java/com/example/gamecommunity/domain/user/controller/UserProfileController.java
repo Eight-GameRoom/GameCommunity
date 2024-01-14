@@ -3,6 +3,7 @@ package com.example.gamecommunity.domain.user.controller;
 import com.example.gamecommunity.domain.user.dto.ModifyProfileDto;
 import com.example.gamecommunity.domain.user.dto.UserProfileDto.Response;
 import com.example.gamecommunity.domain.user.service.UserProfileService;
+import com.example.gamecommunity.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +22,20 @@ public class UserProfileController {
   private final UserProfileService userProfileService;
 
   @GetMapping("/{userId}")
-  public ResponseEntity<Response> getProfile(
+  public ResponseEntity<ApiResponse> getProfile(
           @PathVariable Long userId
   ) {
-    return ResponseEntity.ok().body(userProfileService.getProfile(userId));
+    return ResponseEntity.ok(ApiResponse.ok("프로필 조회 성공", userProfileService.getProfile(userId)));
   }
 
   @PatchMapping("/{userId}")
-  public ResponseEntity<String> modifyProfile(
+  public ResponseEntity<ApiResponse> modifyProfile(
           @PathVariable Long userId,
           @RequestBody @Valid ModifyProfileDto modifyProfileDto
   ) {
     userProfileService.modifyProfile(userId, modifyProfileDto.introduction(), modifyProfileDto.profile_url());
 
-    return ResponseEntity.ok("프로필 수정 성공");
+    return ResponseEntity.ok(ApiResponse.ok("프로필 수정 성공", null));
   }
 
 
