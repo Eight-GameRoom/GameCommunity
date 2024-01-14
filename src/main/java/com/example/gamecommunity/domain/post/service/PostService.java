@@ -1,5 +1,7 @@
 package com.example.gamecommunity.domain.post.service;
 
+import static com.example.gamecommunity.domain.user.entity.UserRoleEnum.ADMIN;
+
 import com.example.gamecommunity.domain.enums.board.BoardName;
 import com.example.gamecommunity.domain.enums.game.name.GameName;
 import com.example.gamecommunity.domain.enums.game.type.GameType;
@@ -80,15 +82,7 @@ public class PostService {
       Long postId, PostRequestDto requestDto, MultipartFile file, UserDetailsImpl userDetails)
       throws IOException {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    Post post = getFindPost(postId);
-
-    // 로그인한 유저와 게시글 작성자와 일치하는지 확인
-    if (!loginUser.getNickname().equals(post.getPostAuthor())) {
-      throw new BusinessException(HttpStatus.UNAUTHORIZED,
-          ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
-    }
+    Post post = getAuthenticationPost(postId, userDetails);
 
     String imageUrl = post.getPostImageUrl();
 
@@ -103,23 +97,32 @@ public class PostService {
   @Transactional
   public void deletePost(Long postId, UserDetailsImpl userDetails) {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    Post post = getFindPost(postId);
-
-    // 로그인한 유저와 게시글 작성자와 일치하는지 확인
-    if (!loginUser.getNickname().equals(post.getPostAuthor())) {
-      throw new BusinessException(HttpStatus.UNAUTHORIZED,
-          ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
-    }
+    Post post = getAuthenticationPost(postId, userDetails);
 
     postRepository.delete(post);
   }
 
+  // 게시글 가져오는 메서드
   public Post getFindPost(Long postId) {
     return postRepository.findById(postId)
         .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND,
             ErrorCode.NOT_FOUND_POST_EXCEPTION));
+  }
+
+  // 인증된 게시글 가져오는 메서드
+  private Post getAuthenticationPost(Long postId, UserDetailsImpl userDetails) {
+    User loginUser = authenticationHelper.checkAuthentication(userDetails);
+
+    Post post = getFindPost(postId);
+
+    boolean isAdmin = loginUser.getRole().equals(ADMIN);
+
+    // 로그인한 유저가 게시글 작성자나 관리자가 아니면 수정 불가
+    if (!isAdmin && !loginUser.getNickname().equals(post.getPostAuthor())) {
+      throw new BusinessException(HttpStatus.UNAUTHORIZED,
+          ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
+    }
+    return post;
   }
 
 }

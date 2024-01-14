@@ -24,8 +24,8 @@ public record SignupRequestDto(
 
       String introduction,
 
-      boolean Admin,
-      String AdminToken){
+      boolean isAdmin,
+      String adminToken){
 
     public User toEntity(String passwordEncoder, UserRoleEnum role){
       return User.builder()
