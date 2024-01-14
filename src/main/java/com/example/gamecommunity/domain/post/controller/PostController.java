@@ -33,8 +33,6 @@ public class PostController {
 
   private final PostService postService;
 
-  private final AuthenticationHelper authenticationHelper;
-
   // 게시글 작성
   @PostMapping
   public ResponseEntity<?> createPost(
@@ -45,9 +43,7 @@ public class PostController {
       @RequestParam BoardName boardName,
       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    postService.createPost(requestDto, gameType, gameName, boardName, file, loginUser);
+    postService.createPost(requestDto, gameType, gameName, boardName, file, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("게시글 작성 성공", null));
   }
 
@@ -84,9 +80,7 @@ public class PostController {
       @RequestPart(value = "file", required = false) MultipartFile file,
       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    postService.updatePost(postId, requestDto, file, loginUser);
+    postService.updatePost(postId, requestDto, file, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("게시글 수정 성공", null));
   }
 
@@ -96,9 +90,7 @@ public class PostController {
       @PathVariable Long postId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    User loginUser = authenticationHelper.checkAuthentication(userDetails);
-
-    postService.deletePost(postId, loginUser);
+    postService.deletePost(postId, userDetails);
     return ResponseEntity.ok(ApiResponse.ok("게시글 삭제 성공", null));
   }
 
