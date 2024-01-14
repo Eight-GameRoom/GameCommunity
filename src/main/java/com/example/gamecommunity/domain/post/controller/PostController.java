@@ -6,8 +6,7 @@ import com.example.gamecommunity.domain.enums.game.type.GameType;
 import com.example.gamecommunity.domain.post.dto.PostRequestDto;
 import com.example.gamecommunity.domain.post.dto.PostResponseDto;
 import com.example.gamecommunity.domain.post.service.PostService;
-import com.example.gamecommunity.domain.user.entity.User;
-import com.example.gamecommunity.global.config.SecurityConfig.AuthenticationHelper;
+import com.example.gamecommunity.global.aop.PostTimer;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
@@ -56,6 +55,7 @@ public class PostController {
   }
 
   // 게시글 페이징 조회
+  @PostTimer()
   @GetMapping
   public ResponseEntity<?> getPosts(
       @RequestParam("page") int page,
