@@ -42,9 +42,10 @@ public class GuestBookController {
   @PatchMapping("/{toUserId}/guestbooks/{guestbookId}")
   public ResponseEntity<ApiResponse> modifyComment(
           @PathVariable Long guestbookId,
-          @RequestBody @Valid ModifyGuestBookDto modifyGuestBookDto
+          @RequestBody @Valid ModifyGuestBookDto modifyGuestBookDto,
+          @AuthenticationPrincipal UserDetailsImpl userDetails
   ) {
-    guestBookService.modifyComment(guestbookId, modifyGuestBookDto.content());
+    guestBookService.modifyComment(guestbookId, modifyGuestBookDto.content(), userDetails);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("방명록 수정 성공", null));
   }
@@ -52,9 +53,10 @@ public class GuestBookController {
   // 방명록 댓글 삭제
   @DeleteMapping("/{toUserId}/guestbooks/{guestbookId}")
   public ResponseEntity<ApiResponse> deleteComment(
-          @PathVariable Long guestbookId
+          @PathVariable Long guestbookId,
+          @AuthenticationPrincipal UserDetailsImpl userDetails
   ) {
-    guestBookService.deleteComment(guestbookId);
+    guestBookService.deleteComment(guestbookId, userDetails);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("방명록 삭제 성공", null));
   }

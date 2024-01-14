@@ -36,20 +36,28 @@ public class GuestBookService {
   }
 
   @Transactional
-  public void modifyComment(Long guestbookId, String content) {
+  public void modifyComment(Long guestbookId, String content, UserDetailsImpl userDetails) {
 
     GuestBook guestBook = guestBookRepository.findById(guestbookId).orElseThrow(
             NotFoundGuestBookException::new);
+
+    if (!guestBook.getFromUser().getId().equals(userDetails.getId())) {
+      throw new IllegalArgumentException("자신이 작성한 방명록 댓글만 수정 가능합니다.");
+    }
 
     guestBook.modifyComment(content);
 
   }
 
   @Transactional
-  public void deleteComment(Long guestbookId) {
+  public void deleteComment(Long guestbookId, UserDetailsImpl userDetails) {
 
     GuestBook guestBook = guestBookRepository.findById(guestbookId).orElseThrow(
             NotFoundGuestBookException::new);
+
+    if (!guestBook.getFromUser().getId().equals(userDetails.getId())) {
+      throw new IllegalArgumentException("자신이 작성한 방명록 댓글만 삭제 가능합니다.");
+    }
 
     guestBookRepository.delete(guestBook);
   }
