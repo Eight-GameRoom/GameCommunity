@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.guestBook.entity;
+package com.example.gamecommunity.domain.guest.entity;
 
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.auditing.TimeStamped;

@@ -1,6 +1,6 @@
-package com.example.gamecommunity.domain.guestBook.repository;
+package com.example.gamecommunity.domain.guest.repository;
 
-import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
+import com.example.gamecommunity.domain.guest.entity.GuestBook;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

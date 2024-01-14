@@ -1,6 +1,6 @@
-package com.example.gamecommunity.domain.guestBook.dto;
+package com.example.gamecommunity.domain.guest.dto;
 
-import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
+import com.example.gamecommunity.domain.guest.entity.GuestBook;
 import com.example.gamecommunity.domain.user.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

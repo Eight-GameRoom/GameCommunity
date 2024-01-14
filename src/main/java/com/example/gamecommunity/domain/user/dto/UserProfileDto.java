@@ -1,6 +1,6 @@
 package com.example.gamecommunity.domain.user.dto;
 
-import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
+import com.example.gamecommunity.domain.guest.entity.GuestBook;
 import com.example.gamecommunity.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
