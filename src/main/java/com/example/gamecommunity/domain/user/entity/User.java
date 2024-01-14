@@ -69,7 +69,7 @@ public class User {
   @OneToMany(mappedBy = "user")
   private List<Post> posts = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "toUser", cascade = CascadeType.REMOVE)
   private List<GuestBook> guestBookList;
 
   public void updatePassword(String password) {
