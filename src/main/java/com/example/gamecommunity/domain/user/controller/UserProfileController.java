@@ -3,9 +3,11 @@ package com.example.gamecommunity.domain.user.controller;
 import com.example.gamecommunity.domain.user.dto.ModifyProfileDto;
 import com.example.gamecommunity.domain.user.service.UserProfileService;
 import com.example.gamecommunity.global.response.ApiResponse;
+import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +32,10 @@ public class UserProfileController {
   @PatchMapping("/{userId}")
   public ResponseEntity<ApiResponse> modifyProfile(
           @PathVariable Long userId,
-          @RequestBody @Valid ModifyProfileDto modifyProfileDto
+          @RequestBody @Valid ModifyProfileDto modifyProfileDto,
+          @AuthenticationPrincipal UserDetailsImpl userDetails
   ) {
-    userProfileService.modifyProfile(userId, modifyProfileDto.introduction(), modifyProfileDto.profile_url());
+    userProfileService.modifyProfile(userId, modifyProfileDto.introduction(), modifyProfileDto.profile_url(), userDetails);
 
     return ResponseEntity.ok(ApiResponse.ok("프로필 수정 성공", null));
   }
