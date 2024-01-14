@@ -1,7 +1,6 @@
 package com.example.gamecommunity.domain.user.controller;
 
 import com.example.gamecommunity.domain.user.dto.ModifyProfileDto;
-import com.example.gamecommunity.domain.user.dto.UserProfileDto.Response;
 import com.example.gamecommunity.domain.user.service.UserProfileService;
 import com.example.gamecommunity.global.response.ApiResponse;
 import jakarta.validation.Valid;

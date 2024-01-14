@@ -1,7 +1,8 @@
 package com.example.gamecommunity.domain.user.entity;
 
-import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
+import com.example.gamecommunity.domain.guestBook.entity.GuestBook;
 import com.example.gamecommunity.domain.post.entity.Post;
+import com.example.gamecommunity.domain.teamUser.entity.TeamUser;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,8 +22,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.joda.time.DateTime;
-import reactor.core.scheduler.Scheduler.Worker;
 
 @Getter
 @Setter
@@ -67,10 +66,11 @@ public class User {
   @OneToMany(mappedBy = "user",cascade = CascadeType.ALL , orphanRemoval = true)
   private List<TeamUser> teamUsers;
 
-
   @OneToMany(mappedBy = "user")
   private List<Post> posts = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  private List<GuestBook> guestBookList;
 
   public void updatePassword(String password) {
     this.password = password;
@@ -83,4 +83,6 @@ public class User {
     this.introduction = introduction;
     this.profileUrl = profileUrl;
   }
+
+
 }
