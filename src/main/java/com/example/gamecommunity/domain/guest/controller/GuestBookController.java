@@ -1,8 +1,8 @@
-package com.example.gamecommunity.domain.guestBook.controller;
+package com.example.gamecommunity.domain.guest.controller;
 
-import com.example.gamecommunity.domain.guestBook.dto.CreateGuestBookDto;
-import com.example.gamecommunity.domain.guestBook.dto.ModifyGuestBookDto;
-import com.example.gamecommunity.domain.guestBook.service.GuestBookService;
+import com.example.gamecommunity.domain.guest.dto.CreateGuestBookDto;
+import com.example.gamecommunity.domain.guest.dto.ModifyGuestBookDto;
+import com.example.gamecommunity.domain.guest.service.GuestBookService;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import jakarta.validation.Valid;

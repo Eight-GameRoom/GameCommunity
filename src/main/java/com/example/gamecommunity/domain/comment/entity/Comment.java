@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.comment.entity;
 
+import com.example.gamecommunity.domain.comment.dto.CommentRequestDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.auditing.TimeStamped;
@@ -26,16 +27,16 @@ public class Comment extends TimeStamped {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "card_id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    public Comment(User user, Post post, String content){
+    public Comment(User user, Post post, CommentRequestDto requestDto){
         this.user = user;
         this.post = post;
-        this.content = content;
+        this.content = requestDto.content();
     }
 
-    public void update(String content){
-        this.content = content;
+    public void update(CommentRequestDto requestDto){
+        this.content = requestDto.content();
     }
 }

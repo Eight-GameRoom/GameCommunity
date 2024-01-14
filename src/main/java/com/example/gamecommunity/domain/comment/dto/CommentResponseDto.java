@@ -6,7 +6,7 @@ import com.example.gamecommunity.domain.comment.entity.Comment;
 import java.time.LocalDateTime;
 
 public record CommentResponseDto(
-        String username,
+        String author,
         String content,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt

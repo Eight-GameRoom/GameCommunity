@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.enums.gameName;
+package com.example.gamecommunity.domain.enums.game.name;
 
 public enum GameName {
 

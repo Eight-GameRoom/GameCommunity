@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.comment.service;
 
+import com.example.gamecommunity.domain.post.service.PostService;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +24,11 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final PostService postService;
 
     public CommentResponseDto createComment(User user, Long postId, CommentRequestDto commentRequestDto) {
-        Post post = postRepository.findById(postId).orElseThrow( () ->
-                new BusinessException(HttpStatus.BAD_REQUEST,  ErrorCode.NOT_FOUND_POST_EXCEPTION));
-        String content = commentRequestDto.getContent();
-        Comment comment = new Comment(user, post, content);
+        Post post = postService.getFindPost(postId);
+        Comment comment = new Comment(user, post, commentRequestDto);
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
     }
@@ -40,7 +40,7 @@ public class CommentService {
         if (!user.getId().equals(comment.getUser().getId())) {
             throw new BusinessException(HttpStatus.BAD_REQUEST,  ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
         }
-        comment.update(commentRequestDto.getContent());
+        comment.update(commentRequestDto);
         return new CommentResponseDto(comment);
 
     }
@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> getComment(Long postId) {
-        return commentRepository.findAllByPostId(postId)
+        return commentRepository.findAllById(postId)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
