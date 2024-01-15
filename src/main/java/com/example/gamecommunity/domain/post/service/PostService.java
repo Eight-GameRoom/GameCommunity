@@ -124,6 +124,11 @@ public class PostService {
     }
     return post;
   }
+  @Transactional
+  public void deleteUserCascadePost(Long userId){
+
+    postRepository.deleteUserCascadePost(userId);
+  }
 
 }
 
