@@ -4,29 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.example.gamecommunity.domain.comment.dto.CommentRequestDto;
 import com.example.gamecommunity.domain.comment.dto.CommentResponseDto;
-import com.example.gamecommunity.domain.comment.repository.CommentRepository;
-import com.example.gamecommunity.domain.enums.boardName.BoardName;
-import com.example.gamecommunity.domain.enums.gameName.GameName;
-import com.example.gamecommunity.domain.enums.gameType.GameType;
-import com.example.gamecommunity.domain.post.dto.PostRequestDto;
-import com.example.gamecommunity.domain.post.dto.PostResponseDto;
-import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.comment.entity.Comment;
+import com.example.gamecommunity.domain.comment.repository.CommentRepository;
+import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.post.repository.PostRepository;
-import com.example.gamecommunity.domain.post.service.PostImageUploadService;
-import com.example.gamecommunity.domain.post.service.PostService;
 import com.example.gamecommunity.domain.test.CommentTest;
-import com.example.gamecommunity.domain.test.PostTest;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.multipart.MultipartFile;
 
 @DisplayName("댓글 서비스 테스트")
 @ActiveProfiles("test")
@@ -68,7 +57,7 @@ class CommentServiceTest implements CommentTest {
     Long postId = TEST_POST_ID;
     User loginUser = TEST_USER;
 
-    given(postRepository.findById(postId)).willReturn(Optional.of(post));
+    given(postRepository.findByPostId(postId)).willReturn(Optional.of(post));
 
     // when
     commentService.createComment(loginUser, post.getPostId(), commentRequestDto1);
@@ -131,66 +120,66 @@ class CommentServiceTest implements CommentTest {
     assertEquals(TEST_ANOTHER_COMMENT_CONTENT, comment.getContent());
   }
 
-//  @Test
-//  @DisplayName("게시글 수정 - 실패(로그한 유저가 게시글 작성자가 아님")
-//  void updatePostTestFailureNotAuth() throws IOException {
-//
-//    // given
-//    Long postId = TEST_POST_ID;
-//    Post post = TEST_POST;
-//    User loginUser = TEST_ANOTHER_USER;
-//    MultipartFile file = mock(MultipartFile.class);
-//
-//    PostRequestDto requestDto = new PostRequestDto(
-//        TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
-//
-//    given(postRepository.findById(postId)).willReturn(Optional.of(post));
-//
-//    // when, then
-//    BusinessException ex = assertThrows(BusinessException.class, () -> {
-//      postService.updatePost(postId, requestDto, file, loginUser);
-//    });
-//
-//    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
-//    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
-//  }
-//
-//  @Test
-//  @DisplayName("게시글 삭제 - 성공")
-//  void deletePostTestSuccess() {
-//
-//    // given
-//    Long postId = TEST_POST_ID;
-//    Post post = TEST_POST;
-//    User loginUser = TEST_USER;
-//
-//    given(postRepository.findById(postId)).willReturn(Optional.of(post));
-//
-//    // when
-//    postService.deletePost(postId, loginUser);
-//
-//    // then
-//    verify(postRepository, times(1)).delete(post);
-//  }
-//
-//  @Test
-//  @DisplayName("게시글 삭제 - 실패(로그한 유저가 게시글 작성자가 아님")
-//  void deletePostTestFailureNotAuth() {
-//
-//    // given
-//    Long postId = TEST_POST_ID;
-//    Post post = TEST_POST;
-//    User loginUser = TEST_ANOTHER_USER;
-//
-//    given(postRepository.findById(postId)).willReturn(Optional.of(post));
-//
-//    // when, then
-//    BusinessException ex = assertThrows(BusinessException.class, () -> {
-//      postService.deletePost(postId, loginUser);
-//    });
-//
-//    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
-//    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
-//  }
+  @Test
+  @DisplayName("댓글 수정 - 실패(댓글 주인이 아님)")
+  void updateCommentTestFail() {
+
+    // given
+    User loginUser = TEST_USER;
+    User nonOwnerUser = TEST_ANOTHER_USER;
+    CommentRequestDto commentRequestDto = new CommentRequestDto(TEST_ANOTHER_COMMENT_CONTENT);
+    Long commentId = TEST_COMMENT_ID;
+    Comment comment = TEST_COMMENT;
+
+    given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
+
+    // when
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
+      commentService.updateComment(nonOwnerUser,commentId,commentRequestDto);
+    });
+
+    // then
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
+  }
+  @Test
+  @DisplayName("댓글 삭제 - 성공")
+  void deleteCommentTestSuccess() {
+
+    // given
+    User loginUser = TEST_USER;
+    Long commentId = TEST_COMMENT_ID;
+    Comment comment = TEST_COMMENT;
+
+    given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
+
+    // when
+    commentService.deleteComment(loginUser,commentId);
+
+    // then
+    verify(commentRepository, times(1)).delete(comment);
+  }
+
+  @Test
+  @DisplayName("댓글 삭제 - 성공(댓글의 주인이 아님")
+  void deleteCommentTestFail() {
+
+    // given
+    User loginUser = TEST_USER;
+    User nonOwnerUser = TEST_ANOTHER_USER;
+    Long commentId = TEST_COMMENT_ID;
+    Comment comment = TEST_COMMENT;
+
+    given(commentRepository.findByCommentId(commentId)).willReturn(Optional.of(comment));
+
+    // when
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
+      commentService.deleteComment(nonOwnerUser,commentId);
+    });
+
+    // then
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
+  }
 
 }
