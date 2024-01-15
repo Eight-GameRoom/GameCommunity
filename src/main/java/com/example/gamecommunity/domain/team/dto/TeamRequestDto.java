@@ -11,9 +11,9 @@ public record TeamRequestDto(
     GameName gameName
 ) {
   public TeamRequestDto(Team team) {
-    this(team.getName(),
-        team.getImage(),
-        team.getIntroduction(),
+    this(team.getTeamName(),
+        team.getTeamImage(),
+        team.getTeamIntroduction(),
         team.getGameName());
   }
 

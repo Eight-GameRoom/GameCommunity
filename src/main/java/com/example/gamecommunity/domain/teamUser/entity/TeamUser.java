@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "team_users")
 @NoArgsConstructor
 @Getter
+@Builder
+@AllArgsConstructor
 public class TeamUser {
 
   @EmbeddedId
@@ -35,7 +39,7 @@ public class TeamUser {
   private User user;
 
   public TeamUser(Team team, User user){
-    this.id= new TeamUserId(team.getId(), user.getId());
+    this.id= new TeamUserId(team.getTeamId(), user.getId());
     this.team = team;
     this.user = user;
 
