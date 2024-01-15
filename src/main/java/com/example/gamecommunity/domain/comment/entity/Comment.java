@@ -4,6 +4,8 @@ import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.auditing.TimeStamped;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,10 +15,12 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @Table(name = "comments")
+@Builder
+@AllArgsConstructor
 public class Comment extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long commentId;
 
     @Column(nullable = false)
     private String content;

@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
 public record CommentRequestDto(
         String content
 ) {
