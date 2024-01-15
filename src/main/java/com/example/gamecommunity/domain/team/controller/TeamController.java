@@ -1,6 +1,6 @@
 package com.example.gamecommunity.domain.team.controller;
 
-import com.example.gamecommunity.domain.enums.gameName.GameName;
+import com.example.gamecommunity.domain.enums.game.name.GameName;
 import com.example.gamecommunity.domain.team.dto.TeamRequestDto;
 import com.example.gamecommunity.domain.team.dto.TeamResponseDto;
 import com.example.gamecommunity.domain.team.service.TeamService;

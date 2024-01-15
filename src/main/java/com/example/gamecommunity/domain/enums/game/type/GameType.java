@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.enums.gameType;
+package com.example.gamecommunity.domain.enums.game.type;
 
 public enum GameType {
   PC_GAME,

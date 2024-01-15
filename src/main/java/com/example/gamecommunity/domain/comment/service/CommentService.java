@@ -1,5 +1,6 @@
 package com.example.gamecommunity.domain.comment.service;
 
+
 import com.example.gamecommunity.domain.enums.boardName.BoardName;
 import com.example.gamecommunity.domain.enums.gameName.GameName;
 import com.example.gamecommunity.domain.enums.gameType.GameType;
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final PostService postService;
 
     public CommentResponseDto createComment(User user, Long postId, CommentRequestDto commentRequestDto) {
         Post post = postRepository.findByPostId(postId).orElseThrow( () ->
@@ -64,8 +66,6 @@ public class CommentService {
 
         commentRepository.delete(comment);
     }
-
-
     public Page<CommentResponseDto> getComments(
         int page, int size, String sortKey, boolean isAsc,
         Long postId) {

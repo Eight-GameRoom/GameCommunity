@@ -31,6 +31,8 @@ public class UserDetailsImpl implements UserDetails {
         return user.getEmail();
     }
 
+    public Long getId() { return user.getId(); }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         UserRoleEnum role = user.getRole();
@@ -63,4 +65,6 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

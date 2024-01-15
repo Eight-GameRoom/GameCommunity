@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.enums.boardName;
+package com.example.gamecommunity.domain.enums.board;
 
 public enum BoardName {
   // 자유 게시판

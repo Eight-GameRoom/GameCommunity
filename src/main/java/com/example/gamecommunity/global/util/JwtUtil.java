@@ -84,6 +84,16 @@ public class JwtUtil {
     return null;
   }
 
+  public String getJWtRefreshHeader(HttpServletRequest request) {
+
+    String bearerToken = request.getHeader(Refresh_Header);
+
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+      return bearerToken.substring(7);
+    }
+    return null;
+  }
+
   public boolean validateToken(String token) {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -129,4 +139,13 @@ public class JwtUtil {
     long now = new Date().getTime();
     return (expiration.getTime() - now);
   }
+
+  public UserRoleEnum getUserRole(String refreshToken){
+    Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(refreshToken).getBody();
+
+    UserRoleEnum role = UserRoleEnum.valueOf((String) claims.get(AUTHORIZATION_KEY));
+
+    return role;
+  }
+
 }
