@@ -33,9 +33,9 @@ public class CommentService {
     private final PostRepository postRepository;
 
     public CommentResponseDto createComment(User user, Long postId, CommentRequestDto commentRequestDto) {
-        Post post = postRepository.findById(postId).orElseThrow( () ->
+        Post post = postRepository.findByPostId(postId).orElseThrow( () ->
                 new BusinessException(HttpStatus.BAD_REQUEST,  ErrorCode.NOT_FOUND_POST_EXCEPTION));
-        String content = commentRequestDto.getContent();
+        String content = commentRequestDto.content();
         Comment comment = new Comment(user, post, content);
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
@@ -43,19 +43,19 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updateComment(User user, Long commentId, CommentRequestDto commentRequestDto){
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() ->
                 new BusinessException(HttpStatus.BAD_REQUEST,ErrorCode.NOT_FOUND_COMMENT));
         if (!user.getId().equals(comment.getUser().getId())) {
             throw new BusinessException(HttpStatus.BAD_REQUEST,  ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
         }
-        comment.update(commentRequestDto.getContent());
+        comment.update(commentRequestDto.content());
         return new CommentResponseDto(comment);
 
     }
 
 
     public void deleteComment(User user, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+        Comment comment = commentRepository.findByCommentId(commentId).orElseThrow(() ->
                 new BusinessException(HttpStatus.BAD_REQUEST,ErrorCode.NOT_FOUND_COMMENT));
 
         if (!user.getId().equals(comment.getUser().getId())) {
@@ -69,7 +69,7 @@ public class CommentService {
     public Page<CommentResponseDto> getComments(
         int page, int size, String sortKey, boolean isAsc,
         Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() ->
+        Post post = postRepository.findByPostId(postId).orElseThrow(() ->
             new BusinessException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_POST_EXCEPTION));
 
         // 페이징 및 정렬처리
