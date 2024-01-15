@@ -5,13 +5,13 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public record CommentRequestDto(
         String content
 ) {
 
     public CommentRequestDto(Comment comment) {
         this(comment.getContent());
-
     }
 
 }
