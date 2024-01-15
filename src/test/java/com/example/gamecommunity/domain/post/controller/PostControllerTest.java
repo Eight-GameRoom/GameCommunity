@@ -1,11 +1,8 @@
 package com.example.gamecommunity.domain.post.controller;
 
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.times;
-import static org.mockito.BDDMockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,14 +19,17 @@ import com.example.gamecommunity.global.exception.common.BusinessException;
 import com.example.gamecommunity.global.exception.common.ErrorCode;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
 import java.nio.charset.StandardCharsets;
+import javax.net.ssl.HttpsURLConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -156,14 +156,13 @@ class PostControllerTest extends ControllerTest implements PostTest {
     action.andExpect(status().isOk()).andDo(print());
   }
 
-/*  @Nested
+  @Nested
   @DisplayName("게시글 수정")
   class updatePost {
 
     @DisplayName("성공")
     @Test
     @WithMockUser(authorities = {"USER"})
-    @Disabled
     void updatePostSuccess() throws Exception {
 
       // given
@@ -173,86 +172,87 @@ class PostControllerTest extends ControllerTest implements PostTest {
           "image/jpeg",
           "uploadFile".getBytes(StandardCharsets.UTF_8));
 
-      PostRequestDto requestDto = new PostRequestDto(TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
+      PostRequestDto requestDto = new PostRequestDto(TEST_ANOTHER_POST.getPostTitle(),
+          TEST_ANOTHER_POST.getPostContent());
       MockMultipartFile request = new MockMultipartFile(
           "requestDto", null, "application/json",
           objectMapper.writeValueAsString(requestDto).getBytes(StandardCharsets.UTF_8));
 
-      given(postService.updatePost(TEST_POST_ID, requestDto, file, new UserDetailsImpl(PostTest.TEST_USER)))
-          .willReturn(null);
-
       // when
-      var action = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/posts/{postId}")
-          .file(file)
-          .file(request)
-          .contentType(MediaType.MULTIPART_FORM_DATA)
-          .accept(MediaType.APPLICATION_JSON));
+      var action = mockMvc.perform(
+          MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/api/posts/{postId}", TEST_POST_ID)
+              .file(file)
+              .file(request)
+              .contentType(MediaType.MULTIPART_FORM_DATA)
+              .accept(MediaType.APPLICATION_JSON));
 
       // then
+      action.andDo(print());
       action.andExpect(status().isOk()).andDo(print());
-
     }
 
-    @DisplayName("실패 - 자신의 글만 수정")
-    @Test
-    @WithMockUser(authorities = {"USER"})
-    void updatePostFailure() throws Exception {
+//    @DisplayName("실패 - 자신의 글만 수정")
+//    @Test
+//    @WithAnonymousUser
+//    void updatePostFailure() throws Exception {
+//
+//      // given
+//      MockMultipartFile file = new MockMultipartFile(
+//          "file",
+//          "test-image.jpg",
+//          "image/jpeg",
+//          "uploadFile".getBytes(StandardCharsets.UTF_8));
+//
+//      PostRequestDto requestDto = new PostRequestDto(TEST_ANOTHER_POST.getPostTitle(),
+//          TEST_ANOTHER_POST.getPostContent());
+//      MockMultipartFile request = new MockMultipartFile(
+//          "requestDto", null, "application/json",
+//          objectMapper.writeValueAsString(requestDto).getBytes(StandardCharsets.UTF_8));
+//
+//      // when
+//      var action = mockMvc.perform(MockMvcRequestBuilders
+//              .multipart(HttpMethod.PATCH, "/api/posts/{postId}", TEST_POST_ID)
+//              .file(file)
+//              .file(request)
+//              .contentType(MediaType.MULTIPART_FORM_DATA)
+//              .accept(MediaType.APPLICATION_JSON));
+//
+//      // then
+//      action.andDo(print());
+//      action.andExpect(status().isUnauthorized()).andDo(print());
+//    }
+//  }
 
-      // given
-      MockMultipartFile file = new MockMultipartFile(
-          "file",
-          "test-image.jpg",
-          "image/jpeg",
-          "uploadFile".getBytes(StandardCharsets.UTF_8));
+    @Nested
+    @DisplayName("게시글 삭제")
+    class deletePost {
 
-      PostRequestDto requestDto = new PostRequestDto(TEST_ANOTHER_POST.getPostTitle(), TEST_ANOTHER_POST.getPostContent());
-      MockMultipartFile request = new MockMultipartFile(
-          "requestDto", null, "application/json",
-          objectMapper.writeValueAsString(requestDto).getBytes(StandardCharsets.UTF_8));
+      @DisplayName("성공")
+      @Test
+      @WithMockUser(authorities = {"USER"})
+      void deletePostSuccess() throws Exception {
 
-      given(postService.updatePost(TEST_POST_ID, requestDto, file, new UserDetailsImpl(PostTest.TEST_USER)))
-          .willThrow(new BusinessException(HttpStatus.UNAUTHORIZED, ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION));
+        // given
 
-      // when
-      var action = mockMvc.perform(multipart("/api/posts/{postId}", TEST_POST_ID)
-          .file(file)
-          .file(request)
-          .contentType(MediaType.MULTIPART_FORM_DATA)
-          .accept(MediaType.APPLICATION_JSON));
+        // when
 
-      // then
-      action.andExpect(status().isUnauthorized()).andDo(print());
-    }
-  }*/
+        // then
 
-  @Nested
-  @DisplayName("게시글 삭제")
-  class deletePost {
+      }
 
-    @DisplayName("성공")
-    @Test
-    @WithMockUser(authorities = {"USER"})
-    void deletePostSuccess() throws Exception {
+      @DisplayName("실패 - 자신의 글만 삭제")
+      @Test
+      @WithMockUser(authorities = {"USER"})
+      void deletePostFailure() throws Exception {
 
-      // given
+        // given
 
-      // when
+        // when
 
-      // then
+        // then
 
-    }
-
-    @DisplayName("실패 - 자신의 글만 삭제")
-    @Test
-    @WithMockUser(authorities = {"USER"})
-    void deletePostFailure() throws Exception {
-
-      // given
-
-      // when
-
-      // then
-
+      }
     }
   }
 }
+
