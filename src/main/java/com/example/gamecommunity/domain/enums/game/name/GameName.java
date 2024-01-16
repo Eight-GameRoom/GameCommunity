@@ -9,7 +9,7 @@ public enum GameName {
   // CONSOLE_GAME
   THE_LEGEND_OF_ZELDA_TEARS_OF_THE_KINGDOM,
 
-  // MOBILE
+  EMPTY_NAME, // MOBILE
   BRAWL_STARS
 
 }
