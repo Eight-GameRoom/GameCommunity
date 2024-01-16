@@ -173,4 +173,50 @@ class TeamServiceTest implements TeamUserTest {
     assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
     assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
   }
+
+  @Test
+  @DisplayName("팀 삭제 - 성공")
+  void deleteTeamTestSuccess() {
+
+    // given
+    TeamRequestDto teamRequestDto = new TeamRequestDto(TEST_ANOTHER_TEAM_NAME, TEST_ANOTHER_TEAM_IMAGE,
+        TEST_ANOTHER_TEAM_INTRODUCTION, TEST_ANOTHER_GAME_NAME);
+    Long teamId = TEST_TEAM_ID;
+    User loginUser = TEST_USER;
+    Team team = TEST_TEAM;
+
+    given(teamRepository.findByTeamId(teamId)).willReturn(Optional.of(team));
+
+    // when
+    teamService.deleteTeam(loginUser, teamId);
+
+    // Then
+    verify(teamRepository, times(1)).delete(team);
+  }
+
+  @Test
+  @DisplayName("팀 삭제 - 실패(수정 권한이 없음)")
+  void deleteTeamFailSuccess() {
+
+    // given
+    TeamRequestDto teamRequestDto = new TeamRequestDto(TEST_ANOTHER_TEAM_NAME, TEST_ANOTHER_TEAM_IMAGE,
+        TEST_ANOTHER_TEAM_INTRODUCTION, TEST_ANOTHER_GAME_NAME);
+    Long teamId = TEST_TEAM_ID;
+    User loginUser = TEST_ANOTHER_USER;
+    Team team = TEST_TEAM;
+
+    given(teamRepository.findByTeamId(teamId)).willReturn(Optional.of(team));
+
+    // when
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
+      teamService.deleteTeam(loginUser, teamId);
+    });
+
+    // Then
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
+  }
+
+
+
 }
