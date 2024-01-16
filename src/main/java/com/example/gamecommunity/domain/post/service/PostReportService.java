@@ -40,4 +40,9 @@ public class PostReportService {
 
     postRepository.save(post);
   }
+  @Transactional
+  public void deleteUserCascadePostReport(Long userId){
+
+    postReportRepository.deleteUserCascadePostReport(userId);
+  }
 }

@@ -78,5 +78,10 @@ public class PostLikeService {
       post.setPostUnlike(post.getPostUnlike() - 1);
     }
   }
+  @Transactional
+  public void deleteUserCascadePostLike(Long userId){
+
+    postLikeRepository.deleteUserCascadePostLike(userId);
+  }
 
 }

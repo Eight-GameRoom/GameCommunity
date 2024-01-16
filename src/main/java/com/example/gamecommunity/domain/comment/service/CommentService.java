@@ -63,4 +63,8 @@ public class CommentService {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
     }
+    @Transactional
+    public void deleteUserCascadeComment(Long userId){
+        commentRepository.deleteUserCascadeComment(userId);
+    }
 }

@@ -1,7 +1,13 @@
 package com.example.gamecommunity.domain.user.service;
 
 
-
+import com.example.gamecommunity.domain.comment.service.CommentService;
+import com.example.gamecommunity.domain.post.service.PostLikeService;
+import com.example.gamecommunity.domain.post.service.PostReportService;
+import com.example.gamecommunity.domain.post.service.PostService;
+import com.example.gamecommunity.domain.team.user.entity.TeamUser;
+import com.example.gamecommunity.domain.team.user.repository.TeamUserRepository;
+import com.example.gamecommunity.domain.team.user.service.TeamUserService;
 import com.example.gamecommunity.domain.user.dto.EmailDto.CheckRequest;
 import com.example.gamecommunity.domain.user.dto.LoginRequestDto;
 import com.example.gamecommunity.domain.user.dto.PasswordChangeRequestDto;
@@ -21,6 +27,8 @@ import io.jsonwebtoken.Claims;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -39,6 +47,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
+  private final TeamUserRepository teamUserRepository;
+
+  private final PostLikeService postLikeService;
+  private final PostReportService postReportService;
+  private final CommentService commentService;
+  private final PostService postService;
+  private final TeamUserService teamUserService;
+
   private final PasswordEncoder passwordEncoder;
   private final JavaMailSender mailSender;
 
@@ -188,6 +204,34 @@ public class UserService {
     return tokenDto;
   }
 
+  public void unregister(Long userId) {
+    User user = userRepository.findById(userId).orElseThrow(() ->
+        new BusinessException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER_EXCEPTION)
+    );
+
+    // 게시글 좋아요,신고는,댓글,댓글 좋아요 단방향이라 직접 삭제
+    postLikeService.deleteUserCascadePostLike(userId);
+    postReportService.deleteUserCascadePostReport(userId);
+    commentService.deleteUserCascadeComment(userId);
+
+    // 현재 코드상 팀의 관리자가 팀을 탈퇴 할경우 팀을 삭제 하고,일반 동료이면 그냥 팀 탈퇴
+    List<TeamUser> teamUserList = teamUserRepository.findByUserId(userId);
+
+    List<Long> teamIdList = new ArrayList<>();
+    for (TeamUser teamUser : teamUserList) {
+      if(teamUser.getTeam().getAdminId().equals(userId)){
+        teamIdList.add(teamUser.getTeam().getId());
+      }
+    }
+    // 현재 복합키 떄문에 삭제 안됨
+    teamUserService.deleteByTeamIdList(teamIdList);
+
+    // 게시글은 양방향이지만 영속성 전이 안해줘서 직접 삭제
+    postService.deleteUserCascadePost(userId);
+
+    userRepository.delete(user);
+  }
+
 
   public void idEmailUnique(String email) {
     if (userRepository.findByEmail(email).isPresent()) {
@@ -235,5 +279,6 @@ public class UserService {
   public User findByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
   }
+
 
 }

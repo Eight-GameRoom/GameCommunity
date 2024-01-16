@@ -103,4 +103,13 @@ public class UserController {
 
     return ResponseEntity.ok(ApiResponse.ok("토큰 재발급 성공.", null));
   }
+
+  // 회원 탈퇴
+  @DeleteMapping()
+  public ResponseEntity<ApiResponse> unregister(@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+    userService.unregister(userDetails.getUser().getId());
+
+    return ResponseEntity.ok(ApiResponse.ok("회원 탈퇴 성공", null));
+  }
 }
