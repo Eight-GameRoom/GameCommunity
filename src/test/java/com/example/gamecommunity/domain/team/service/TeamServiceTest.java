@@ -1,4 +1,4 @@
-package com.example.gamecommunity.domain.post.service;
+package com.example.gamecommunity.domain.team.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -132,28 +132,45 @@ class TeamServiceTest implements TeamUserTest {
     assertEquals(teamUser1.getTeam().getTeamName(), result.get(0).teamName());
   }
 
-//  @Test
-//  @DisplayName("유저별 팀 조회 - 실패")
-//  void getTeamsByUserTestFail() {
-//
-//    // Given
-//    User user = UserTest.TEST_USER;
-//    TeamUser teamUser1 = TeamUserTest.TEST_TEAM_USER;
-//    TeamUser teamUser2 = TeamUserTest.TEST_ANOTHER_TEAM_USER;
-//    // 가상의 데이터 리스트 생성
-//    List<TeamUser> teamUserList = Arrays.asList(teamUser1, teamUser2);
-//
-//// Mock 객체의 findAllByGameName 메서드 호출에 대한 동작 설정
-//    given(teamUserRepository.findAllByUserId(user.getId())).willReturn(teamUserList);
-//
-//    // When
-//    List<TeamResponseDto> result = teamService.getTeamsByUser(user);
-//
-//    // Then
-//    assertNotNull(result);
-//    assertFalse(result.isEmpty());
-//
-//    assertEquals(teamUser1.getTeam().getTeamName(), result.get(0).teamName());
-//  }
+  @Test
+  @DisplayName("팀 정보 수정  - 성공")
+  void updateTeamTestSuccess() {
 
+    // given
+    TeamRequestDto teamRequestDto = new TeamRequestDto(TEST_ANOTHER_TEAM_NAME, TEST_ANOTHER_TEAM_IMAGE,
+        TEST_ANOTHER_TEAM_INTRODUCTION, TEST_ANOTHER_GAME_NAME);
+    Long teamId = TEST_TEAM_ID;
+    User loginUser = TEST_USER;
+    Team team = TEST_TEAM;
+
+    given(teamRepository.findByTeamId(teamId)).willReturn(Optional.of(team));
+
+    // when
+    teamService.updateTeam(loginUser, teamId,teamRequestDto);
+
+    // Then
+    assertEquals(team.getTeamName(),TEST_ANOTHER_TEAM.getTeamName());
+  }
+
+  @Test
+  @DisplayName("팀 정보 수정(수정 권한이 없음)  - 실패")
+  void updateTeamTestFail() {
+    // given
+    TeamRequestDto teamRequestDto = new TeamRequestDto(TEST_ANOTHER_TEAM_NAME, TEST_ANOTHER_TEAM_IMAGE,
+        TEST_ANOTHER_TEAM_INTRODUCTION, TEST_ANOTHER_GAME_NAME);
+    Long teamId = TEST_TEAM_ID;
+    User loginUser = TEST_ANOTHER_USER;
+    Team team = TEST_TEAM;
+
+    given(teamRepository.findByTeamId(teamId)).willReturn(Optional.of(team));
+
+    // when
+    BusinessException ex = assertThrows(BusinessException.class, () -> {
+      teamService.updateTeam(loginUser, teamId, teamRequestDto);
+    });
+
+    // Then
+    assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+    assertEquals(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION.getMessage(), ex.getMessage());
+  }
 }
