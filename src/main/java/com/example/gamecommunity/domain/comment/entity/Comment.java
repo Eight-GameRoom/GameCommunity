@@ -4,13 +4,18 @@ import com.example.gamecommunity.domain.comment.dto.CommentRequestDto;
 import com.example.gamecommunity.domain.post.entity.Post;
 import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.global.auditing.TimeStamped;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 @Entity
 @Getter
