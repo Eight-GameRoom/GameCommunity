@@ -1,6 +1,7 @@
 package com.example.gamecommunity.domain.user.controller;
 
 import com.example.gamecommunity.domain.user.dto.ModifyProfileDto;
+import com.example.gamecommunity.domain.user.entity.User;
 import com.example.gamecommunity.domain.user.service.UserProfileService;
 import com.example.gamecommunity.global.response.ApiResponse;
 import com.example.gamecommunity.global.security.userdetails.UserDetailsImpl;
@@ -21,6 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserProfileController {
 
   private final UserProfileService userProfileService;
+
+  @GetMapping
+  public ResponseEntity<ApiResponse> getMyProfile(
+      @AuthenticationPrincipal UserDetailsImpl userDetails
+  ) {
+    User user = userDetails.getUser();
+    return ResponseEntity.ok(ApiResponse.ok("프로필 조회 성공", userProfileService.getProfile(user.getId())));
+  }
 
   @GetMapping("/{userId}")
   public ResponseEntity<ApiResponse> getProfile(
