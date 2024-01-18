@@ -31,6 +31,17 @@ public class UserProfileController {
     return ResponseEntity.ok(ApiResponse.ok("프로필 조회 성공", userProfileService.getProfile(user.getId())));
   }
 
+  @PatchMapping()
+  public ResponseEntity<ApiResponse> modifyMyProfile(
+      @RequestBody @Valid ModifyProfileDto modifyProfileDto,
+      @AuthenticationPrincipal UserDetailsImpl userDetails
+  ) {
+    User user = userDetails.getUser();
+    userProfileService.modifyProfile(user.getId(), modifyProfileDto.introduction(), modifyProfileDto.profile_url(), userDetails);
+
+    return ResponseEntity.ok(ApiResponse.ok("프로필 수정 성공", null));
+  }
+
   @GetMapping("/{userId}")
   public ResponseEntity<ApiResponse> getProfile(
           @PathVariable Long userId
